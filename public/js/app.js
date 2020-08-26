@@ -1,3 +1,5 @@
+let psyduck;
+
 var config = {
     type: Phaser.AUTO,
     width: 800,
@@ -10,7 +12,8 @@ var config = {
     },
     scene: {
         preload: preload,
-        create: create
+        create: create,
+        update: update
     }
 };
 
@@ -18,6 +21,9 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
+    //psyduck mashup
+    this.load.image('psyduck', '../assets/psyduck.png');
+
     this.load.setBaseURL('http://labs.phaser.io');
 
     this.load.image('sky', 'assets/skies/space3.png');
@@ -44,4 +50,11 @@ function create ()
     logo.setCollideWorldBounds(true);
 
     emitter.startFollow(logo);
+
+    psyduck = this.add.sprite(64, 64, 'psyduck');
+
+}
+
+function update() {
+  psyduck.x += 1;
 }
