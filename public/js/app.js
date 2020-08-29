@@ -32,6 +32,7 @@ var SceneA = new Phaser.Class({
     }
 
 });
+<<<<<<< HEAD
 
 var SceneB = new Phaser.Class({
 
@@ -86,6 +87,59 @@ var SceneC = new Phaser.Class({
         this.load.image('spywhite', '../assets/sprites/spy_white.png');
         this.load.image('spygray', '../assets/sprites/spy_gray.png');
 
+=======
+
+var SceneB = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function SceneB ()
+    {
+        Phaser.Scene.call(this, { key: 'sceneB' });
+    },
+
+    preload: function ()
+    {
+        this.load.image('arrow', '../assets/sprites/spy_white.png');
+    },
+
+    create: function ()
+    {
+        this.arrow = this.add.sprite(400, 300, 'arrow').setOrigin(0, 0.5);
+
+        this.input.once('pointerdown', function (event) {
+
+            console.log('From SceneB to SceneC');
+
+            this.scene.start('sceneC');
+
+        }, this);
+    },
+
+    update: function (time, delta)
+    {
+        this.arrow.rotation += 0.01;
+    }
+
+});
+
+var SceneC = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function SceneC ()
+    {
+        Phaser.Scene.call(this, { key: 'sceneC' });
+    },
+
+    preload: function ()
+    {
+        this.load.image('spyblack', '../assets/sprites/spy_black.png');
+>>>>>>> a8d1924dbc9406f05518d6c0f37c880db1e8fe1d
     },
 
     create: function ()
@@ -94,9 +148,13 @@ var SceneC = new Phaser.Class({
 
         this.spyblack = this.add.sprite(Phaser.Math.Between(0, 800), 300, 'spyblack');
 
+<<<<<<< HEAD
         this.spywhite = this.add.sprite(Phaser.Math.Between(0, 800), 300, 'spywhite');
 
         player = this.physics.add.image(400, 300, 'spygray');
+=======
+        player = this.physics.add.image(400, 300, 'spyblack');
+>>>>>>> a8d1924dbc9406f05518d6c0f37c880db1e8fe1d
 
         player.setCollideWorldBounds(true);
 
@@ -144,7 +202,11 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
+<<<<<<< HEAD
             debug: false
+=======
+            debug: true
+>>>>>>> a8d1924dbc9406f05518d6c0f37c880db1e8fe1d
         }
     },
     parent: 'phaser-example',
