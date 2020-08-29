@@ -1,5 +1,6 @@
 var player;
-
+var spyblack, spywhite;
+var talking, proximity;
 
 var SceneA = new Phaser.Class({
 
@@ -78,6 +79,7 @@ var SceneC = new Phaser.Class({
     function SceneC ()
     {
         Phaser.Scene.call(this, { key: 'sceneC' });
+        talking = false;
     },
 
     preload: function ()
@@ -95,14 +97,20 @@ var SceneC = new Phaser.Class({
     {
         cursors = this.input.keyboard.createCursorKeys();
 
-        this.spyblack = this.add.sprite(Phaser.Math.Between(0, 800), 300, 'spyblack-right');
+        spyblack = this.physics.add.sprite(Phaser.Math.Between(0, 800), 300, 'spyblack-right');
 
-        this.spywhite = this.add.sprite(Phaser.Math.Between(0, 800), 300, 'spywhite-right');
+        spywhite = this.physics.add.sprite(Phaser.Math.Between(0, 800), 300, 'spywhite-right');
 
-        player = this.physics.add.image(400, 300, 'spygray-right');
+        player = this.physics.add.sprite(400, 300, 'spygray-right');
+
+        this.physics.add.collider(player, this.spyblack);
+        this.physics.add.collider(player, this.spywhite);
+
+        this.physics.add.overlap(player, this.spyblack, parlay, null, this);
 
         player.setCollideWorldBounds(true);
 
+        //change scene
         this.input.once('pointerdown', function (event) {
 
             console.log('From SceneC to SceneA');
@@ -110,22 +118,32 @@ var SceneC = new Phaser.Class({
             this.scene.start('sceneA');
 
         }, this);
+
     },
 
     update: function (time, delta)
     {
+
+      //overlap to talk
+      proximity = false;
+
+      this.physics.world.overlap(player, spyblack, isClose, null, this);
+      this.physics.world.overlap(player, spywhite, isClose, null, this);
+
+      parlay();
+      //movement if player agent
       player.setVelocity(0);
 
       if (cursors.left.isDown)
       {
           player.toggleFlipX();
-          //player = this.physics.add.sprite(player.x, player.y, 'spygray-left');
+
           player.setVelocityX(-300);
       }
       else if (cursors.right.isDown)
       {
           player.toggleFlipX();
-          //player = this.physics.add.sprite(player.x, player.y, 'spygray-right');
+
           player.setVelocityX(300);
       }
 
@@ -142,6 +160,22 @@ var SceneC = new Phaser.Class({
 });
 
 var cursors;
+
+function isClose () {
+    proximity = true;
+};
+
+function parlay () {
+    //cut talk if not close
+    if (!proximity) {
+        talking = false;
+    }
+    //TALK options 💬
+    if (!talking && proximity) {
+      console.log('hello! ga ga ga, blah blah, din ding dong, tralalalala');
+      talking = true;
+    };
+}
 
 var config = {
     type: Phaser.AUTO,
