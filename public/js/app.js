@@ -12,6 +12,8 @@ var keyObjE;
 var timedEvent;
 var timer = 0;
 var bombExplodes;
+var trust = 0;
+
 
 var SceneA_Options = new Phaser.Class({
 
@@ -282,13 +284,19 @@ var SceneC = new Phaser.Class({
 
         timer += delta;
         if (timer > 3000) {
-          bomb = this.physics.add.sprite(
-            spyblack_location.x,
-            spyblack_location.y,
-            'bomb'
-          );
-          blast = this.physics.add.sprite(100, 100, "explosion");
-          throwsBomb();
+          console.log('trust' + trust);
+
+            if( (trust < 5) &&
+              (talking === false)){
+              bomb = this.physics.add.sprite(
+                spyblack_location.x,
+                spyblack_location.y,
+                'bomb'
+              );
+              blast = this.physics.add.sprite(100, 100, "explosion");
+              throwsBomb();
+            }
+
           bombExplodes = false;
           timer = 0;
         }
@@ -306,12 +314,12 @@ function parlay () {
     //cut talk if not close
     if (!proximity) {
         talking = false;
-        return;
+        return ;
     }
     //TALK options 💬
     if (!talking && proximity) {
       console.log('tralalalala');
-
+      trust += 1;
       var dialogue = new Dialogue();
 
       talking = true;
@@ -319,8 +327,6 @@ function parlay () {
 }
 
 var onBlast = function(){
-   //throwSpeed = 30
-
   blast.x = bomb.x;
   blast.y = bomb.y;
   blast.play('bang');
@@ -337,7 +343,7 @@ var onKillaBlast = function(){
 }
 
 function throwsBomb() {
-  console.log("BOMB");
+
   bomb.setAngle(15);
   bomb.angularVelocity = 15;
   var direction;
