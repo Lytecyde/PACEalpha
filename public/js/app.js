@@ -166,9 +166,11 @@ var SceneC = new Phaser.Class({
 
         bomb.setAngle(15);
         bomb.body.angularVelocity = 15;
-        bomb.body.setVelocity(-400, -400);
+        var direction;
+        direction = spyblack_location.x >= spywhite_location.x ? -1:1;
+        bomb.body.setVelocity(direction * 400, -400);
         bomb.body.drag.x = 40;
-        bomb.setGravity(0,1600);
+        bomb.setGravity(0, 1600);
         //blast = game.add.weapon(12,'bomb');
         //blast.autofire = true;
         //blast.fireRate = 6000;
@@ -239,7 +241,7 @@ var SceneC = new Phaser.Class({
         this.physics.world.overlap(player, spywhite, isClose, null, this);
 
         //this.physics.world.overlap(bomb, spyblack,   onBlast, null, this);
-        this.physics.world.overlap(bomb, spywhite,   onBlast, null, this);
+        this.physics.world.overlap(bomb, spywhite,   onKillaBlast, null, this);
         //let's talk
         parlay();
         //movement of player agent
@@ -324,6 +326,11 @@ var onBlast = function(){
     bomb.destroy();
   });
 };
+
+var onKillaBlast = function(){
+  onBlast;
+  spywhite.destroy();
+}
 
 var config = {
     type: Phaser.AUTO,
