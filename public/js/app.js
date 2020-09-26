@@ -3,13 +3,14 @@ import Dialogue from '../js/dialogue.js';
 var player;
 var spyblack, spywhite;
 var spyblack_location, spywhite_location;
-var boom;
+var blast;
 var timedEvent;
 var bomb;
 var throwSpeed;
 var talking, proximity;
 var keyObjE;
-
+var speedBomb;
+var bombStartX;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -125,9 +126,9 @@ var SceneC = new Phaser.Class({
         this.load.spritesheet(
           'explosion',
           '../assets/sprites/explosion_spritesheet.png',
-          { frameWidth: 32, frameHeight: 32 },
-          12
+          { frameWidth: 32, frameHeight: 32 }
         );
+
     },
 
     create: function ()
@@ -136,6 +137,8 @@ var SceneC = new Phaser.Class({
         cursors = this.input.keyboard.createCursorKeys();
 
         keyObjE = this.input.keyboard.addKey('E');
+
+        bombStartX = 300;
 
         spyblack_location = {
           x:Phaser.Math.Between(0, 800),
@@ -161,6 +164,16 @@ var SceneC = new Phaser.Class({
           'bomb'
         );
 
+        bomb.setAngle(15);
+        bomb.body.angularVelocity = 15;
+        bomb.body.setVelocity(-400, -400);
+        bomb.body.drag.x = 40;
+        bomb.setGravity(0,1600);
+        //blast = game.add.weapon(12,'bomb');
+        //blast.autofire = true;
+        //blast.fireRate = 6000;
+        blast = this.physics.add.sprite(100, 100, "explosion");
+
         player = this.physics.add.sprite(400, 300, 'spygray-right');
 
         this.physics.add.collider(player, this.spyblack);
@@ -173,9 +186,6 @@ var SceneC = new Phaser.Class({
           null,
           this
         );
-
-        this.physics.add.collider(this.spyblack, bomb);
-        this.physics.add.collider(this.spywhite, bomb);
 
         player.setCollideWorldBounds(true);
 
@@ -193,9 +203,33 @@ var SceneC = new Phaser.Class({
           },
         this);
 
+        speedBomb = Phaser.Math.GetSpeed(600, 5);
+
+        this.anims.create({
+          key: 'bang',
+          frames: this.anims.generateFrameNumbers(
+            'explosion',
+           { start: 0, end: 11 }),
+          defaultTextureKey: null,
+
+          // time
+          delay: 0,
+          frameRate: 24,
+          duration: null,
+          skipMissedFrames: true,
+
+          // repeat
+          repeat: 0,
+          repeatDelay: 2,
+          yoyo: false,
+
+          // visible
+          showOnStart: false,
+          hideOnComplete: true
+        });
     },
 
-    update: function ()
+    update: function (time, delta)
     {
 
         //overlap to talk
@@ -204,8 +238,8 @@ var SceneC = new Phaser.Class({
         this.physics.world.overlap(player, spyblack, isClose, null, this);
         this.physics.world.overlap(player, spywhite, isClose, null, this);
 
-        this.physics.world.overlap(bomb, spyblack,   onThrowBomb, null, this);
-        this.physics.world.overlap(bomb, spywhite,   onThrowBomb, null, this);
+        //this.physics.world.overlap(bomb, spyblack,   onBlast, null, this);
+        this.physics.world.overlap(bomb, spywhite,   onBlast, null, this);
         //let's talk
         parlay();
         //movement of player agent
@@ -235,10 +269,23 @@ var SceneC = new Phaser.Class({
 
         if(keyObjE.isDown)
         {
-          boom;
+          blast.fire();
         }
-      }
-    
+
+        if(bomb.y < 300){
+          //bomb.x += speedBomb * delta;
+          bomb.angle += 4;
+        }
+
+        if(bomb.y > 300) {
+
+          bomb.y = 300;
+          bomb.body.setVelocity(0,0);
+          onBlast();
+        }
+
+    }
+
 });
 
 var cursors;
@@ -263,53 +310,20 @@ function parlay () {
     };
 }
 
-function onThrowBomb(){
-  //throwSpeed = 30;
-  var throwingDistance =
-    (2 *
-    throwSpeed *
-    throwSpeed *
-    Math.sin(Math.PI / 8) *
-    Math.cos(Math.PI / 8) ) / 9.8;
-
-  //bomb.setVelocityX(throwSpeed);
-
-  // timedEvent = this.time.addEvent({
-  //   delay: 0,
-  //   callback: onThrowBomb,
-  //   callbackScope: this,
-  //   repeat: 1,
-  //   startAt: 3000
-  // });
-  boom;
-
-  this.anims.play('explosion');
-};
-
 var boom = function() {
-  this.anims.create({
-    key: 'explosion',
-    frames: this.anims.generateFrameNumbers(
-      'explosion',
-     { start: 0, end: 11 }),
-    defaultTextureKey: null,
 
-    // time
-    delay: 0,
-    frameRate: 24,
-    duration: null,
-    skipMissedFrames: true,
-
-    // repeat
-    repeat: -1,
-    repeatDelay: 2,
-    yoyo: false,
-
-    // visible
-    showOnStart: false,
-    hideOnComplete: false
-  });
 }
+
+var onBlast = function(){
+  //throwSpeed = 30;
+  console.log('banging');
+  blast.x = bomb.x;
+  blast.y = bomb.y;
+  blast.play('bang');
+  blast.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
+    bomb.destroy();
+  });
+};
 
 var config = {
     type: Phaser.AUTO,
