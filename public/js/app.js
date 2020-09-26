@@ -9,8 +9,9 @@ var bomb;
 var throwSpeed;
 var talking, proximity;
 var keyObjE;
-var speedBomb;
-var bombStartX;
+var timedEvent;
+var timer = 0;
+var bombExplodes;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -136,9 +137,9 @@ var SceneC = new Phaser.Class({
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        keyObjE = this.input.keyboard.addKey('E');
+        bombExplodes = false;
 
-        bombStartX = 300;
+        keyObjE = this.input.keyboard.addKey('E');
 
         spyblack_location = {
           x:Phaser.Math.Between(0, 800),
@@ -164,13 +165,7 @@ var SceneC = new Phaser.Class({
           'bomb'
         );
 
-        bomb.setAngle(15);
-        bomb.body.angularVelocity = 15;
-        var direction;
-        direction = spyblack_location.x >= spywhite_location.x ? -1:1;
-        bomb.body.setVelocity(direction * 400, -400);
-        bomb.body.drag.x = 40;
-        bomb.setGravity(0, 1600);
+        //throwsBomb();
         //blast = game.add.weapon(12,'bomb');
         //blast.autofire = true;
         //blast.fireRate = 6000;
@@ -205,8 +200,6 @@ var SceneC = new Phaser.Class({
           },
         this);
 
-        speedBomb = Phaser.Math.GetSpeed(600, 5);
-
         this.anims.create({
           key: 'bang',
           frames: this.anims.generateFrameNumbers(
@@ -234,6 +227,7 @@ var SceneC = new Phaser.Class({
     update: function (time, delta)
     {
 
+
         //overlap to talk
         proximity = false;
 
@@ -241,7 +235,7 @@ var SceneC = new Phaser.Class({
         this.physics.world.overlap(player, spywhite, isClose, null, this);
 
         //this.physics.world.overlap(bomb, spyblack,   onBlast, null, this);
-        this.physics.world.overlap(bomb, spywhite,   onKillaBlast, null, this);
+        this.physics.world.overlap(bomb, spywhite, onKillaBlast, null, this);
         //let's talk
         parlay();
         //movement of player agent
@@ -271,7 +265,7 @@ var SceneC = new Phaser.Class({
 
         if(keyObjE.isDown)
         {
-          blast.fire();
+          //blast.play('bang');
         }
 
         if(bomb.y < 300){
@@ -279,13 +273,25 @@ var SceneC = new Phaser.Class({
           bomb.angle += 4;
         }
 
-        if(bomb.y > 300) {
-
+        if(bomb.y > 300 && bombExplodes === false) {
           bomb.y = 300;
-          bomb.body.setVelocity(0,0);
+          bomb.setVelocity(0,0);
+          bombExplodes = true;
           onBlast();
         }
 
+        timer += delta;
+        if (timer > 3000) {
+          bomb = this.physics.add.sprite(
+            spyblack_location.x,
+            spyblack_location.y,
+            'bomb'
+          );
+          blast = this.physics.add.sprite(100, 100, "explosion");
+          throwsBomb();
+          bombExplodes = false;
+          timer = 0;
+        }
     }
 
 });
@@ -312,24 +318,33 @@ function parlay () {
     };
 }
 
-var boom = function() {
-
-}
-
 var onBlast = function(){
-  //throwSpeed = 30;
-  console.log('banging');
+   //throwSpeed = 30
+
   blast.x = bomb.x;
   blast.y = bomb.y;
   blast.play('bang');
   blast.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
-    bomb.destroy();
-  });
+      bomb.destroy();
+   });
+  //
+  bombExplodes = false;
 };
 
 var onKillaBlast = function(){
-  onBlast;
+  onBlast();
   spywhite.destroy();
+}
+
+function throwsBomb() {
+  console.log("BOMB");
+  bomb.setAngle(15);
+  bomb.angularVelocity = 15;
+  var direction;
+  direction = spyblack_location.x >= spywhite_location.x ? -1:1;
+  bomb.setVelocity(direction * 400, -400);
+  bomb.setDrag(40,0);
+  bomb.setGravity(0, 1600);
 }
 
 var config = {
