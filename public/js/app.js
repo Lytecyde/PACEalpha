@@ -1,6 +1,7 @@
 import Dialogue from '../js/dialogue.js';
 
 var player;
+var layer;
 var spyblack, spywhite;
 var spyblack_location, spywhite_location;
 var blast;
@@ -13,7 +14,7 @@ var timedEvent;
 var timer = 0;
 var bombExplodes;
 var trust = 0;
-
+var serenity = 100;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -61,28 +62,67 @@ var SceneB_CityView = new Phaser.Class({
     preload: function ()
     {
         this.load.image('arrow', '../assets/sprites/spy_white.png');
+
+        this.load.image("tiles", "../assets/tileart/darkCity.png");
+        this.load.tilemapCSV("map", "../assets/maps/level_0.csv");
+
+        this.load.image(
+          'spygray-right',
+          '../assets/sprites/spy_gray.png'
+        );
+
+        this.load.image(
+          'spygray-left',
+          '../assets/sprites/spy_gray_left.png'
+        );
     },
 
     create: function ()
     {
-        this.arrow = this.add.sprite(400, 300, 'arrow').setOrigin(0, 0.5);
+        layer = createCity(this);
+
+        cursors = this.input.keyboard.createCursorKeys();
+
+        player = this.physics.add.sprite(144, 32, 'spygray-right');
+        player.setCollideWorldBounds(true);
 
         this.input.once('pointerdown', function (event) {
-
             console.log('From SceneB_CityView to SceneC');
-
             this.scene.start('sceneC');
-
         }, this);
     },
 
     update: function (time, delta)
     {
-        this.arrow.rotation += 0.01;
+       this.physics.add.collider(player, layer);
+
+       player.setVelocity(0);
+
+       if (cursors.left.isDown)
+       {
+           player.toggleFlipX();
+           player.setVelocityX(-300);
+       }
+       else if (cursors.right.isDown)
+       {
+           player.toggleFlipX();
+           player.setVelocityX(300);
+       }
+
+       if (cursors.up.isDown)
+       {
+           player.setVelocityY(-300);
+       }
+       else if (cursors.down.isDown)
+       {
+           player.setVelocityY(300);
+       }
+
     }
 
 });
 
+//WalkScene
 var SceneC = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -101,15 +141,23 @@ var SceneC = new Phaser.Class({
         this.load.image(
           'spyblack-right',
          '../assets/sprites/spy_black.png'
-       );
+        );
+
         this.load.image(
           'spywhite-right',
           '../assets/sprites/spy_white.png'
         );
+
         this.load.image(
           'spygray-right',
           '../assets/sprites/spy_gray.png'
         );
+
+        this.load.image(
+          'spygray-left',
+          '../assets/sprites/spy_gray_left.png'
+        );
+
         this.load.image(
           'spyblack-left',
           '../assets/sprites/spy_black_left.png'
@@ -118,20 +166,19 @@ var SceneC = new Phaser.Class({
           'spywhite-left',
           '../assets/sprites/spy_white_left.png'
         );
-        this.load.image(
-          'spygray-left',
-          '../assets/sprites/spy_gray_left.png'
-        );
+
         this.load.image(
           'bomb',
           '../assets/sprites/bomb.png'
         );
+
         this.load.spritesheet(
           'explosion',
           '../assets/sprites/explosion_spritesheet.png',
           { frameWidth: 32, frameHeight: 32 }
         );
 
+        loadCity(this);
     },
 
     create: function ()
@@ -228,8 +275,6 @@ var SceneC = new Phaser.Class({
 
     update: function (time, delta)
     {
-
-
         //overlap to talk
         proximity = false;
 
@@ -246,13 +291,11 @@ var SceneC = new Phaser.Class({
         if (cursors.left.isDown)
         {
             player.toggleFlipX();
-
             player.setVelocityX(-300);
         }
         else if (cursors.right.isDown)
         {
             player.toggleFlipX();
-
             player.setVelocityX(300);
         }
 
@@ -286,7 +329,7 @@ var SceneC = new Phaser.Class({
         if (timer > 3000) {
           console.log('trust' + trust);
 
-            if( (trust < 5) &&
+            if( (trust < 3) &&
               (talking === false)){
               bomb = this.physics.add.sprite(
                 spyblack_location.x,
@@ -295,6 +338,7 @@ var SceneC = new Phaser.Class({
               );
               blast = this.physics.add.sprite(100, 100, "explosion");
               throwsBomb();
+
             }
 
           bombExplodes = false;
@@ -305,6 +349,15 @@ var SceneC = new Phaser.Class({
 });
 
 var cursors;
+
+function createCity(scene) {
+  const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
+  const tileset = map.addTilesetImage("tiles");
+  const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  //walk path
+  layer.setCollisionBetween(0, 2);
+  return layer;
+}
 
 function isClose () {
     proximity = true;
@@ -318,12 +371,14 @@ function parlay () {
     }
     //TALK options 💬
     if (!talking && proximity) {
-      console.log('tralalalala');
+      //console.log('tralalalala');
       trust += 1;
       var dialogue = new Dialogue();
-
+      dialogue.negotiationStairway(trust);
       talking = true;
     };
+
+
 }
 
 var onBlast = function(){
@@ -351,6 +406,10 @@ function throwsBomb() {
   bomb.setVelocity(direction * 400, -400);
   bomb.setDrag(40,0);
   bomb.setGravity(0, 1600);
+}
+
+function loadCity(scene) {
+  var map = [];
 }
 
 var config = {
