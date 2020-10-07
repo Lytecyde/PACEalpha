@@ -5,9 +5,204 @@
   <meta charset="UTF-8" />
   <title>spies for pace. alpha version</title>
   <script src="http://localhost:8080/phaser/phaser.min.js"></script>
+  <!--<link rel="stylesheet" href="../css/style.css?v=3">-->
+  <style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    grid-gap: 10px;
+    background-color: #009600;
+    padding: 10px;
+    grid-template-rows:auto auto;
+  }
+
+  #talk  {
+    //visibility: hidden;
+    border-radius: 20px;
+  }
+
+  .party {
+    background-color: rgba(0, 255, 0, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+    grid-column: span 2;
+    grid-template-columns:  33vw 33vw 33vw;
+    grid-template-rows: auto;
+    grid-row: 1;
+  }
+
+  .content {
+    font-size: 300px;
+  }
+
+  .team {
+    background-color: rgba(0, 255, 0, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+    grid-row: 2;
+
+  }
+
+  #command-menu {
+    font-size: 20px;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap: 2px;
+    margin: 8px;
+  }
+
+  .command-menu-item {
+    background: white;
+    border-radius: 20px;
+  }
+
+  .command-menu-item:hover {
+    background-color: gray;
+  }
+
+  #negotiator {
+    font-size: 30px;
+    position: relative;
+    width: 33vw;
+  }
+
+  #logs {
+    font-size: 30px;
+    position: relative;
+    width: 33vw;
+  }
+
+  #counterpart {
+    font-size: 30px;
+    position: relative;
+    width: 33vw;
+  }
+
+  .warning-sign {
+    color: red;
+    font-size: 30px;
+  }
+
+  .label {
+    background-color: white;
+    border-radius: 20px;
+  }
+
+  #chat-history {
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    height: 80pc;
+    width: 100%;
+    max-width: 33vw;
+    border-radius: 20px;
+    background-color: white;
+    margin: 4px;
+    border: 4px;
+  }
+
+  #reply {
+    height: 24px;
+    border-radius: 20px;
+    background-color: rgba(124,124,124,0.9);
+    border: 2px;
+  }
+
+  input {
+    height: 20px;
+    width: 100%;
+    border-radius: 20px;
+    background-color: white;
+  }
+</style>
+
 </head>
 
 <body>
+
+   <div id="talk" class="grid-container">
+       <div id="negotiator" class="grid-item party">
+         <div class="label">Negotiator:</div>
+         <div class="warning-sign" hidden>&#9210;</div> <!--  warning dot-->
+         <div class="content">&#x1F603;</div>
+       </div>
+       <div id="logs" class="grid-item party">
+         <div class="label">LOGS </div>
+         <div id="chat-history"></div>
+         <input id="reply" type="text" placeholder='Enter Name Here'/>
+         <button type='button' id='replyButton' onclick="addText()"/> &#x27A2; </button><!--arrow-->
+
+         <div id="command-menu" >
+           <div class="command-menu-item">
+             Silence
+           </div>
+           <div class="command-menu-item">
+             Label
+           </div>
+           <div class="command-menu-item">
+             Mirror
+           </div>
+           <div class="command-menu-item">
+            Get NO
+           </div>
+           <div class="command-menu-item">
+             Question
+           </div>
+           <div class="command-menu-item">
+             Identify
+           </div>
+           <div class="command-menu-item">
+             Bridge
+           </div>
+           <div class="command-menu-item">
+             Sum-up
+           </div>
+           <div class="command-menu-item">
+             Triple
+           </div>
+         </div>
+       </div>
+       <div id="counterpart" class="grid-item party">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F925;</div>
+       </div>
+      <!-- TEAM-->
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+       <div class="grid-item team">
+         <div class="label"> </div>
+         <div class="warning-sign" hidden>&#9210;</div>
+         <div class="content">&#x1F468;</div>
+       </div>
+   </div>
+<script type="text/javascript" src="../js/chat.js"></script>
 <script type="module" src="../js/app.js"></script>
 <script type="module" src="../js/dialogue.js"></script>
 </body>

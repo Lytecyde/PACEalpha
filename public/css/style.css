@@ -1,0 +1,33 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  grid-gap: 10px;
+  background-color: #009600;
+  padding: 10px;
+  grid-template-rows:auto auto;
+}
+
+#talk  {
+  visibility: hidden;
+  border-radius: 20px;
+}
+
+.party {
+  background-color: rgba(0, 255, 0, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 300px;
+  grid-column: span 2;
+  grid-template-columns:  33pc 33pc 33pc;
+  grid-template-rows: auto;
+  grid-row: 1;
+}
+
+.team {
+  background-color: rgba(0, 255, 0, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+  grid-row: 2;
+
+}

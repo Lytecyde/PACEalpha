@@ -15,6 +15,10 @@ var timer = 0;
 var bombExplodes;
 var trust = 0;
 var serenity = 100;
+var enter;
+
+const CANVAS_WIDTH = 32 * 8 * 6;
+const CANVAS_HEIGHT = 32 * 7 * 3;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -61,10 +65,13 @@ var SceneB_CityView = new Phaser.Class({
 
     preload: function ()
     {
-        this.load.image('arrow', '../assets/sprites/spy_white.png');
-
+        //this.load.image('arrow', '../assets/sprites/spy_white.png');
+        //TODO: create baddies
+        this.load.spritesheet('baddies', '../assets/sprites/baddies.png',
+          {frameWidth:32, frameHeight:32}
+        );
         this.load.image("tiles", "../assets/tileart/darkCity.png");
-        this.load.tilemapCSV("map", "../assets/maps/level_0.csv");
+        this.load.tilemapCSV("map", "../assets/maps/house.csv");
 
         this.load.image(
           'spygray-right',
@@ -83,8 +90,16 @@ var SceneB_CityView = new Phaser.Class({
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        player = this.physics.add.sprite(144, 32, 'spygray-right');
+        player = this.physics.add.sprite(32*4 +16, 32, 'spygray-right');
         player.setCollideWorldBounds(true);
+
+        proponents = this.add.group(
+          { key: 'baddies',
+            frame: 0,
+            repeat: 15,
+            setXY: { x: 32, y: 100, stepX: 40 }
+          }
+        );
 
         this.input.once('pointerdown', function (event) {
             console.log('From SceneB_CityView to SceneC');
@@ -101,25 +116,57 @@ var SceneB_CityView = new Phaser.Class({
        if (cursors.left.isDown)
        {
            player.toggleFlipX();
-           player.setVelocityX(-300);
+           player.setVelocityX(-100);
        }
        else if (cursors.right.isDown)
        {
            player.toggleFlipX();
-           player.setVelocityX(300);
+           player.setVelocityX(100);
        }
 
        if (cursors.up.isDown)
        {
-           player.setVelocityY(-300);
+           player.setVelocityY(-100);
        }
        else if (cursors.down.isDown)
        {
-           player.setVelocityY(300);
+           player.setVelocityY(100);
        }
 
     }
 
+});
+
+//TalkScene
+var TalkScene = new Phaser.Class({
+  Extends: Phaser.Scene,
+  initialize:
+
+  function TalkScene ()
+  {
+    Phaser.Scene.call(this, {key: 'TalkScene'});
+  },
+  create: function ()
+  {
+    enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+
+    this.scene.launch('TalkScene');
+
+    document.getElementById("talk").style.visibility = "visible";
+
+    //change scene
+    this.input.once(
+      'pointerdown',
+      function (event) {
+        console.log('From TalkScene to SceneA_Options');
+        this.scene.start('SceneA_Options');
+      },
+    this);
+
+    enter.on('down', function (key, event) {
+      addText();
+    });
+  }
 });
 
 //WalkScene
@@ -225,6 +272,7 @@ var SceneC = new Phaser.Class({
         this.physics.add.collider(player, this.spyblack);
         this.physics.add.collider(player, this.spywhite);
 
+        //talk when meeting black side
         this.physics.add.overlap(
           player,
           this.spyblack,
@@ -243,12 +291,12 @@ var SceneC = new Phaser.Class({
           'pointerdown',
           function (event) {
 
-            console.log('From SceneC to SceneA_Options');
+            console.log('From SceneC to TalkScene');
 
-            this.scene.start('SceneA_Options');
+            this.scene.start('TalkScene');
           },
         this);
-
+        //create explosion animation
         this.anims.create({
           key: 'bang',
           frames: this.anims.generateFrameNumbers(
@@ -350,14 +398,44 @@ var SceneC = new Phaser.Class({
 
 var cursors;
 
-function createCity(scene) {
-  const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
-  const tileset = map.addTilesetImage("tiles");
-  const layer = map.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
-  //walk path
-  layer.setCollisionBetween(0, 2);
-  return layer;
+function addText ()
+{
+    document.getElementById('chat-history').innerHTML +=
+      document.getElementById('reply').value + "\n";
+};
+
+function createAvenue () {
+  var house = [
+    [0,0,0,0,3,6,6,3],
+    [0,0,0,0,3,2,2,3],
+    [0,0,0,0,3,2,2,3],
+    [0,4,4,0,3,2,2,3],
+    [3,3,3,3,3,6,6,3],
+    [1,1,1,1,7,2,2,7],
+    [1,1,1,1,7,2,2,7]
+  ];
+  return house.concat(house, house);
 }
+
+function zipconcat (a, b) {
+  var c = [[]];
+  for (var i = 0; i < a.length; i++) {
+    c[i] = a[i].concat(b[i]);
+  }
+  return c;
+}
+
+function createCity (scene) {
+  var avenue = createAvenue();
+  var level = zipconcat(zipconcat(avenue, avenue), zipconcat(avenue, avenue));
+  const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
+  const block = scene.make.tilemap({ data : level , tileWidth: 32, tileHeight: 32})
+  const tileset = block.addTilesetImage("tiles");
+  const layer = block.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  //walk path
+  layer.setCollisionBetween(0, 0);
+  return layer;
+};
 
 function isClose () {
     proximity = true;
@@ -414,8 +492,8 @@ function loadCity(scene) {
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: CANVAS_WIDTH,
+    height: 32 * 7 * 3,
     backgroundColor: '#fff',
     baseURL: 'http://localhost:8080/',
     physics: {
@@ -426,7 +504,7 @@ var config = {
         }
     },
     parent: 'phaser-example',
-    scene: [ SceneA_Options, SceneB_CityView, SceneC ]
+    scene: [ SceneA_Options, SceneB_CityView, SceneC, TalkScene ]
 };
 
 var game = new Phaser.Game(config);
