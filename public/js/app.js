@@ -16,6 +16,8 @@ var bombExplodes;
 var trust = 0;
 var serenity = 100;
 var enter;
+var avenue;
+var level;
 
 const CANVAS_WIDTH = 32 * 8 * 6;
 const CANVAS_HEIGHT = 32 * 7 * 3;
@@ -86,20 +88,27 @@ var SceneB_CityView = new Phaser.Class({
 
     create: function ()
     {
+        avenue = createAvenue();
+        level = zipconcat(zipconcat(avenue, avenue), zipconcat(avenue, avenue));
+
         layer = createCity(this);
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        player = this.physics.add.sprite(32*4 +16, 32, 'spygray-right');
+        player = this.physics.add.sprite(32 * 4 + 16, 32, 'spygray-right');
         player.setCollideWorldBounds(true);
 
-        var proponents = this.add.group(
-          { key: 'baddies',
+        var proponents = this.add.group();
+        proponents.createMultiple(
+        {
+            key: 'baddies',
             frame: 0,
-            repeat: 15,
-            setXY: { x: 16, y: 144, stepX: 32 }
-          }
-        );
+            setXY: { x: 16, y: 144},
+            frameQuantity: 2,
+            repeat: 15
+        });
+
+        setLocations(proponents.getChildren());
 
         this.input.once('pointerdown', function (event) {
             console.log('From SceneB_CityView to SceneC');
@@ -392,7 +401,6 @@ var SceneC = new Phaser.Class({
               );
               blast = this.physics.add.sprite(100, 100, "explosion");
               throwsBomb();
-
             }
 
           bombExplodes = false;
@@ -403,6 +411,19 @@ var SceneC = new Phaser.Class({
 });
 
 var cursors;
+
+var shuffle = function (array)
+{
+    for (var i = array.length - 1; i > 0; i--)
+    {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array;
+};
 
 function addText ()
 {
@@ -420,8 +441,35 @@ function createAvenue () {
     [1,1,1,1,7,2,2,7],
     [1,1,1,1,7,2,2,7]
   ];
+  //TODO park
+  //carpark/promenade/square
   return house.concat(house, house);
 }
+
+function makeLocations(countAgents) {
+  var locations = [];
+  for (var i = 0; i < level.length; i++) {
+    for (var j = 0; j < level[i].length; j++){
+      if(level[i][j] === 3) {
+        locations.push([i, j]);
+      }
+    }
+  }
+  return locations;
+}
+
+function setLocations(proponents) {
+  var agents = proponents;
+  var locations = makeLocations(agents);
+  var shuffledLocations = shuffle(locations);
+  var i = 0;
+    agents.forEach(agent => {
+      var l = shuffledLocations[i];
+      agent.setPosition(l[1]*32, l[0]*32);
+      agent.setOrigin(0,0);
+      i++;
+    });
+  }
 
 function zipconcat (a, b) {
   var c = [[]];
@@ -432,15 +480,13 @@ function zipconcat (a, b) {
 }
 
 function createCity (scene) {
-  var avenue = createAvenue();
-  var level = zipconcat(zipconcat(avenue, avenue), zipconcat(avenue, avenue));
   const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
   const block = scene.make.tilemap({ data : level , tileWidth: 32, tileHeight: 32})
   const tileset = block.addTilesetImage("tiles");
-  const layer = block.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  const layerOfCity = block.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
   //walk path
-  layer.setCollisionBetween(0, 0);
-  return layer;
+  layerOfCity.setCollisionBetween(0, 0);
+  return layerOfCity;
 };
 
 function isClose () {
@@ -456,9 +502,14 @@ function parlay () {
     //TALK options 💬
     if (!talking && proximity) {
       //console.log('tralalalala');
-      trust += 1;
+
       var dialogue = new Dialogue();
-      dialogue.negotiationStairway(trust);
+
+      document.getElementById('labeling').onclick = function(){
+        dialogue.labeling();
+        trust += 1;
+        dialogue.negotiationStairway(trust);
+      };
       talking = true;
     };
 

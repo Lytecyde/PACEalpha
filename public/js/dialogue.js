@@ -1,7 +1,6 @@
 export default class Dialogue {
   constructor () {
     this.talk = "gugu";
-    this.labeling();
   };
 
   negotiationStairway(trust) {
@@ -72,6 +71,7 @@ export default class Dialogue {
       var sentence = "" + starters[randomStarterNumber] +
         negativeFeelings[randomNegativeFeelingNumber];
       console.log("" + sentence);
+      document.getElementById('reply').value = sentence + "...?";
   }
   //3 get to no
   getNo () {
