@@ -66,7 +66,7 @@ var SceneB_CityView = new Phaser.Class({
     preload: function ()
     {
         //this.load.image('arrow', '../assets/sprites/spy_white.png');
-        //TODO: create baddies
+        //TODO: create baddies.png
         this.load.spritesheet('baddies', '../assets/sprites/baddies.png',
           {frameWidth:32, frameHeight:32}
         );
@@ -93,11 +93,11 @@ var SceneB_CityView = new Phaser.Class({
         player = this.physics.add.sprite(32*4 +16, 32, 'spygray-right');
         player.setCollideWorldBounds(true);
 
-        proponents = this.add.group(
+        var proponents = this.add.group(
           { key: 'baddies',
             frame: 0,
             repeat: 15,
-            setXY: { x: 32, y: 100, stepX: 40 }
+            setXY: { x: 16, y: 144, stepX: 32 }
           }
         );
 
@@ -222,6 +222,12 @@ var SceneC = new Phaser.Class({
         this.load.spritesheet(
           'explosion',
           '../assets/sprites/explosion_spritesheet.png',
+          { frameWidth: 32, frameHeight: 32 }
+        );
+
+        this.load.spritesheet(
+          'baddies',
+          '../assets/sprites/baddies.png',
           { frameWidth: 32, frameHeight: 32 }
         );
 
