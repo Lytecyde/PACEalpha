@@ -383,7 +383,7 @@ var SceneC = new Phaser.Class({
 
         if(bomb.y > 300 && bombExplodes === false) {
           bomb.y = 300;
-          bomb.setVelocity(0,0);
+          bomb.setVelocity(0,0); //FIXME sometimes needs to be a this.body
           bombExplodes = true;
           onBlast();
         }
@@ -504,6 +504,10 @@ function parlay () {
       //console.log('tralalalala');
 
       var dialogue = new Dialogue();
+
+      document.getElementById('silence').onclick = function(){
+        dialogue.silence();
+      };
 
       document.getElementById('labeling').onclick = function(){
         dialogue.labeling();

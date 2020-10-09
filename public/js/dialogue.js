@@ -3,12 +3,16 @@ export default class Dialogue {
     this.talk = "gugu";
   };
 
+  randomChoice(length) {
+    return Math.floor(Math.random() * length);
+  }
+
   negotiationStairway(trust) {
     var responses = [
      "You get me?!", //active listening 5
      "Uhuh, that's what concerns us.", // empathy 5
      "That's right!",//rapport 3
-     "Agreed! How can we cooperate on this goal?" //Influence ...settle
+     "Agreed! I think I have a plan, we can cooperate on this goal?" //Influence ...settle
     ];
 
     var responseIndex = trust;
@@ -34,10 +38,29 @@ export default class Dialogue {
     //the action you proposed
   }
 
+  //Silence
+  silence(){
+    var responses = [
+      "Hmh...",
+      "Uhuh",
+      "Yes!",
+      "OK!",
+      "Yeah!",
+      "(nod)",
+      "(raised eyebrow)",
+      "(lean forward)",
+      "Exactly...",
+      "I see...",
+      "I hear you"
+    ];
+    var response = responses[this.randomChoice(responses.length)];
+    document.getElementById('reply').value = response;
+  };
+
   //1
   mirroring (sentence) {
     //last 1-3 words as a question
-
+    //TODO requires proponent to relate and chatter and maybe even lie
   }
   //2
   labeling () {
@@ -51,7 +74,7 @@ export default class Dialogue {
         "sad", "despairing", "dismal", "sorrowful", "sorry",
         //angry
         "hostile", "angry", "revengeful", "resentful", "loathing",
-        //surprised
+        //surprise
         "startled", "shocked", "horrified", "aghast", "stunned",
         //disgust
         "appalled", "nauseated", "disgusted", "repelled", "abhorred",
@@ -64,14 +87,28 @@ export default class Dialogue {
         "It feels like you are ",
         "It sounds like you are "
       ];
-      var randomNegativeFeelingNumber =
-        Math.floor(Math.random() * negativeFeelings.length);
-      var randomStarterNumber =
-        Math.floor(Math.random() * starters.length);
-      var sentence = "" + starters[randomStarterNumber] +
-        negativeFeelings[randomNegativeFeelingNumber];
-      console.log("" + sentence);
-      document.getElementById('reply').value = sentence + "...?";
+
+      var objectsOfFeelings = [
+        "an officer",
+        "an opponent",
+        "a team",
+        "a traitor",
+        "a whistleblowers",
+        "the work",
+        "the terror"
+      ];
+
+      var object =
+      objectsOfFeelings[this.randomChoice(objectsOfFeelings.length)];
+      var inquiryLabelingFeelings =
+       starters[this.randomChoice(starters.length)] +
+       negativeFeelings[this.randomChoice(negativeFeelings.length)] +
+       " about " +
+       object +
+       "...?";
+
+      document.getElementById('reply').value = inquiryLabelingFeelings;
+
   }
   //3 get to no
   getNo () {
