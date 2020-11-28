@@ -7,6 +7,7 @@ var spyblack_location, spywhite_location;
 var blast;
 var timedEvent;
 var bomb;
+var bombs =[];
 var throwSpeed;
 var talking, proximity;
 var keyObjE;
@@ -18,6 +19,7 @@ var serenity = 100;
 var enter;
 var avenue;
 var level;
+var proponents;
 
 const CANVAS_WIDTH = 32 * 8 * 6;
 const CANVAS_HEIGHT = 32 * 7 * 3;
@@ -68,7 +70,7 @@ var SceneB_CityView = new Phaser.Class({
     preload: function ()
     {
         //this.load.image('arrow', '../assets/sprites/spy_white.png');
-        //TODO: create baddies.png
+        
         this.load.spritesheet('baddies', '../assets/sprites/baddies.png',
           {frameWidth:32, frameHeight:32}
         );
@@ -83,37 +85,98 @@ var SceneB_CityView = new Phaser.Class({
         this.load.image(
           'spygray-left',
           '../assets/sprites/spy_gray_left.png'
+        );  
+
+        this.load.image(
+          'bomb',
+          '../assets/sprites/bomb.png'
         );
+
+        this.load.spritesheet(
+          'explosion',
+          '../assets/sprites/explosion_spritesheet.png',
+          { frameWidth: 32, frameHeight: 32 }
+        );
+
     },
 
     create: function ()
     {
-        avenue = createAvenue();
-        level = zipconcat(zipconcat(avenue, avenue), zipconcat(avenue, avenue));
+      this.anims.create({
+        key: 'bang',
+        frames: this.anims.generateFrameNumbers(
+          'explosion',
+         { start: 0, end: 11 }),
+        defaultTextureKey: null,
 
-        layer = createCity(this);
+        // time
+        delay: 0,
+        frameRate: 24,
+        duration: null,
+        skipMissedFrames: true,
 
-        cursors = this.input.keyboard.createCursorKeys();
+        // repeat
+        repeat: 0,
+        repeatDelay: 2,
+        yoyo: false,
 
-        player = this.physics.add.sprite(32 * 4 + 16, 32, 'spygray-right');
-        player.setCollideWorldBounds(true);
+        // visible
+        showOnStart: false,
+        hideOnComplete: true
+      });
 
-        var proponents = this.add.group();
-        proponents.createMultiple(
-        {
-            key: 'baddies',
-            frame: 0,
-            setXY: { x: 16, y: 144},
-            frameQuantity: 2,
-            repeat: 15
-        });
+      
 
-        setLocations(proponents.getChildren());
+      avenue = createAvenue();
+      level = zipconcat(zipconcat(avenue, avenue), zipconcat(avenue, avenue));
 
-        this.input.once('pointerdown', function (event) {
-            console.log('From SceneB_CityView to SceneC');
-            this.scene.start('sceneC');
-        }, this);
+      layer = createCity(this);
+
+      cursors = this.input.keyboard.createCursorKeys();
+
+      player = this.physics.add.sprite(32 * 4 + 16, 32, 'spygray-right');
+      player.setCollideWorldBounds(true);
+
+      proponents = this.add.group();
+      proponents.createMultiple(
+      {
+          key: 'baddies',
+          frame: 0,
+          setXY: { x: 16, y: 144},
+          frameQuantity: 2,
+          repeat: 15
+      });
+
+      setLocations(proponents.getChildren());
+      var bombIndex = 0;
+      proponents.
+      getChildren().
+      forEach(agent => {
+          bombs[bombIndex] = this.physics.add.sprite(
+            agent.getTopCenter().x,
+            agent.getTopCenter().y,
+          'bomb'
+          );
+          bombIndex++;
+        }
+      );
+      this.input.once('pointerdown', function (event) {
+          console.log('From SceneB_CityView to SceneC');
+          this.scene.start('sceneC');
+      }, this);
+
+      this.load.image(
+        'bomb',
+        '../assets/sprites/bomb.png'
+      );
+
+      this.load.spritesheet(
+        'explosion',
+        '../assets/sprites/explosion_spritesheet.png',
+        { frameWidth: 32, frameHeight: 32 }
+      );
+
+      blastWar(proponents.getChildren());  
     },
 
     update: function (time, delta)
@@ -142,6 +205,7 @@ var SceneB_CityView = new Phaser.Class({
            player.setVelocityY(100);
        }
 
+      
     }
 
 });
@@ -459,17 +523,26 @@ function makeLocations(countAgents) {
 }
 
 function setLocations(proponents) {
-  var agents = proponents;
-  var locations = makeLocations(agents);
+  
+  var locations = makeLocations(proponents);
   var shuffledLocations = shuffle(locations);
   var i = 0;
-    agents.forEach(agent => {
-      var l = shuffledLocations[i];
-      agent.setPosition(l[1]*32, l[0]*32);
-      agent.setOrigin(0,0);
-      i++;
-    });
-  }
+  proponents.forEach(agent => {
+    var l = shuffledLocations[i];
+    agent.setPosition(l[1]*32, l[0]*32);
+    agent.setOrigin(0,0);
+    i++;
+  });
+}
+
+//param proponents throws the bomb around
+function blastWar (proponents)
+{
+  bombs.forEach (blast =>  {
+    var location = blast.getTopCenter(blast);
+    throwsBombAt(location); 
+  });
+}
 
 function zipconcat (a, b) {
   var c = [[]];
@@ -537,14 +610,20 @@ var onKillaBlast = function(){
 }
 
 function throwsBomb() {
+  throwsBombAt(spyblack_location);
+}
 
-  bomb.setAngle(15);
-  bomb.angularVelocity = 15;
-  var direction;
-  direction = spyblack_location.x >= spywhite_location.x ? -1:1;
-  bomb.setVelocity(direction * 400, -400);
-  bomb.setDrag(40,0);
-  bomb.setGravity(0, 1600);
+function throwsBombAt() {
+  bombs.forEach(bomb => {
+    bomb.setAngle(15);
+    bomb.angularVelocity = 15;
+    var direction;
+    var location = bomb.getTopCenter();
+    direction = location.x >= location.x ? -1:1;
+    bomb.setVelocity(direction * 400, -400);
+    bomb.setDrag(40,0);
+    bomb.setGravity(0, 1600);
+  });
 }
 
 function loadCity(scene) {
