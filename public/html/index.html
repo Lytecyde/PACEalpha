@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>spies for pace. alpha version</title>
-  <script src="../../lib/phaser.min.js"></script>
+  <script src="../lib/phaser.js"></script>
   <!--<link rel="stylesheet" href="../css/style.css?v=3">-->
   <style>
   .grid-container {
@@ -135,11 +135,11 @@
 </head>
 
 <body>
-
-   <div id="talk" class="grid-container">
+<!--
+     <div id="talk" class="grid-container">
        <div id="negotiator" class="grid-item party">
          <div class="label">Negotiator:</div>
-         <div class="warning-sign" hidden>&#9210;</div> <!--9210  warning dot-->
+         <div class="warning-sign" hidden>&#9210;</div> 
          <div class="content">&#x1F603;</div>
        </div>
        <div id="logs" class="grid-item party">
@@ -147,7 +147,7 @@
           <div id="chat-history"></div>
           <div id="chat-response">
             <input id="reply" type="text" placeholder='Enter Name Here'>
-            <div id='replyButton' onclick="addText()"> &#x27A2; </div><!--27A2 arrow-->
+            <div id='replyButton' onclick="addText()"> &#x27A2; </div>
         </div>
           <div id="command-menu" >
             <div id="silence" class="command-menu-item">
@@ -184,7 +184,7 @@
           <div class="warning-sign" hidden>&#9210;</div>
           <div class="content">&#x1F925;</div>
         </div>
-        <!-- TEAM-->
+        <comment> TEAM <comment>
         <div class="grid-item team">
           <div id="expert-0" class="label">Assertive </div>
           <div class="warning-sign" hidden>&#9210;</div>
@@ -216,6 +216,7 @@
           <div class="content">&#x1F468;</div>
         </div>
    </div>
+-->
 <script type="text/javascript" src="../js/chat.js"></script>
 <script type="module" src="../js/app.js"></script>
 <script type="module" src="../js/dialogue.js"></script>

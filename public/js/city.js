@@ -1,38 +1,49 @@
+'use strict'
 import Helper from './helper.js';
 
 export default class City {
+    avenue = [];
+    city = [];
     constructor() {
-
+        this.createCity();
     };
 
-    createAvenue () {
-        var house = [
-          [0,0,0,0,3,6,6,3],
-          [0,0,0,0,3,2,2,3],
-          [0,0,0,0,3,2,2,3],
-          [0,4,4,0,3,2,2,3],
-          [3,3,3,3,3,6,6,3],
-          [1,1,1,1,7,2,2,7],
-          [1,1,1,1,7,2,2,7]
-        ];
-        //TODO park
-        //carpark/promenade/square
-        return house.concat(house, house);
-      };
+    createCity () {
+      var house = [
+        [3,3,3,3,3,6,6,3],
+        [0,0,0,0,3,6,6,3],
+        [0,0,0,0,3,2,2,3],
+        [0,0,0,0,3,2,2,3],
+        [0,4,4,0,3,2,2,3],
+        [3,3,3,3,3,6,6,3],
+        [1,1,1,1,7,2,2,7],
+        [1,1,1,1,7,2,2,7]
+      ];
 
       
-    createCity (scene) {
-        var helper = new Helper();
-        var avenue = this.createAvenue();
-        var level = helper.zipconcat(
-        helper.zipconcat(avenue, avenue),
-        helper.zipconcat(avenue, avenue));
-        const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
-        const block = scene.make.tilemap({ data : level , tileWidth: 32, tileHeight: 32})
-        const tileset = block.addTilesetImage("tiles");
-        const layerOfCity = block.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
-        //walk path
-        layerOfCity.setCollisionBetween(0, 0);
-        return layerOfCity;
-      };
+      //TODO park
+      //carpark/promenade/square
+      var avenues = 3;
+      var rowsinhouse = 8;
+      var avenue = [];
+      var city = [];
+      var r = [];
+      for ( var j = 0; j < rowsinhouse; j++) {
+        //console.log(avenue);
+        r = r.concat(house[j], house[j], house[j], house[j]);
+      }
+      avenue = avenue.concat(r);
+      this.avenue = avenue.slice();
+      
+      console.log(this.avenue);
+      for (var i = 0; i < avenues; i++) {   
+        city = city.concat(avenue);
+      }
+      this.city = city.slice();
+    };
+
+    getLevel() {
+      console.log("city "  + this.city);
+      return this.city;
+    }
 }

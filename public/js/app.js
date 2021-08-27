@@ -23,8 +23,8 @@ var avenue;
 var level;
 var proponents;
 
-const CANVAS_WIDTH = 32 * 8 * 6;
-const CANVAS_HEIGHT = 32 * 7 * 3;
+const CANVAS_WIDTH = 32 * 8 * 32;
+const CANVAS_HEIGHT = 32 * 8 * 24;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -61,12 +61,14 @@ var SceneA_Options = new Phaser.Class({
 var SceneB_CityView = new CityScene();
 
 //TalkScene
+/**
 var TalkScene = new Phaser.Class({
   Extends: Phaser.Scene,
   initialize:
 
   function TalkScene ()
   {
+    TODO: open talkscene when needed to add to main game screen
     Phaser.Scene.call(this, {key: 'TalkScene'});
   },
   create: function ()
@@ -91,6 +93,7 @@ var TalkScene = new Phaser.Class({
     });
   }
 });
+*/
 
 //WalkScene
 var SceneC = new Phaser.Class({
@@ -220,9 +223,9 @@ var SceneC = new Phaser.Class({
           'pointerdown',
           function (event) {
 
-            console.log('From SceneC to TalkScene');
+            console.log('From SceneC to SceneB_CityView');
 
-            this.scene.start('TalkScene');
+            this.scene.start('SceneB_CityView');
           },
         this);
         //create explosion animation
@@ -344,8 +347,7 @@ function makeLocations(countAgents) {
   return locations;
 }
 
-function setLocations(proponents) {
-  
+function setLocations(proponents) { 
   var locations = makeLocations(proponents);
   var shuffledLocations = Helper.shuffle(locations);
   var i = 0;
@@ -368,9 +370,9 @@ function blastWar (proponents)
 
 function createCity (scene) {
   const map = scene.make.tilemap({ key: "map", tileWidth: 32, tileHeight: 32 });
-  const block = scene.make.tilemap({ data : level , tileWidth: 32, tileHeight: 32})
+  const block = scene.add.tilemap({ data : map , tileWidth: 32, tileHeight: 32})
   const tileset = block.addTilesetImage("tiles");
-  const layerOfCity = block.createStaticLayer(0, tileset, 0, 0); // layer index, tileset, x, y
+  const layerOfCity = block.createLayer(0, tileset, 0, 0); // layer index, tileset, x, y
   //walk path
   layerOfCity.setCollisionBetween(0, 0);
   return layerOfCity;
@@ -447,7 +449,7 @@ function loadCity(scene) {
 var config = {
     type: Phaser.AUTO,
     width: CANVAS_WIDTH,
-    height: 32 * 7 * 3,
+    height: 32 * 8 * 24,
     backgroundColor: '#fff',
     baseURL: 'http://localhost:8080/',
     physics: {
@@ -458,7 +460,7 @@ var config = {
         }
     },
     parent: 'phaser-example',
-    scene: [ SceneA_Options, SceneB_CityView, SceneC, TalkScene ]
+    scene: [ /*SceneA_Options,*/ SceneB_CityView, SceneC/*, TalkScene */ ]
 };
 
 var game = new Phaser.Game(config);

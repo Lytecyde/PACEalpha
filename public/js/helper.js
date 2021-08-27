@@ -12,7 +12,7 @@ export default class Helper {
         return c;
       };
 
-    shuffle() {
+    shuffle(array) {
         for (var i = array.length - 1; i > 0; i--)
         {
             var j = Math.floor(Math.random() * (i + 1));
@@ -22,6 +22,14 @@ export default class Helper {
         }
 
         return array;
-    }  
+    }
 
+    randoms (length) {
+      var j;
+      for (var i = length - 1; i > 0; i--)
+      {
+        j = Math.floor(Math.random() * (i + 1)); 
+      }
+      return j;
+    }  
 }
