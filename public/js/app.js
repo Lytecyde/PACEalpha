@@ -23,8 +23,8 @@ var avenue;
 var level;
 var proponents;
 
-const CANVAS_WIDTH = 32 * 8 * 32;
-const CANVAS_HEIGHT = 32 * 8 * 24;
+const CANVAS_WIDTH = 32 * 32;
+const CANVAS_HEIGHT = 32 * 24;
 
 var SceneA_Options = new Phaser.Class({
 
@@ -34,12 +34,11 @@ var SceneA_Options = new Phaser.Class({
 
     function SceneA_Options ()
     {
-        Phaser.Scene.call(this, { key: 'SceneA_Options' });
+      Phaser.Scene.call(this, { key: 'SceneA_Options' });
     },
 
     preload: function ()
     {
-
         this.load.image('face', '../assets/sprites/spy_gray.png');
     },
 
@@ -449,7 +448,7 @@ function loadCity(scene) {
 var config = {
     type: Phaser.AUTO,
     width: CANVAS_WIDTH,
-    height: 32 * 8 * 24,
+    height: CANVAS_HEIGHT,
     backgroundColor: '#fff',
     baseURL: 'http://localhost:8080/',
     physics: {

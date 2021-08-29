@@ -11,13 +11,14 @@ export default class CityScene extends Phaser.Scene {
 
   makeLocations() {
     var locations = [];
+    var k = 0;
     for (var i = 0; i < 32; i++) {
       for (var j = 0; j < 24; j++){
         var n = this.nuCity;
         var level = n
           .getLevel()
           .slice();
-        var k = i * 32 + j ;  
+        k++;  
         if (level[k] === 3) { //walkpaths
           locations.push({x:i, y:j});
         }
@@ -32,10 +33,13 @@ export default class CityScene extends Phaser.Scene {
     var shuffledLocations = h.shuffle(locations);
     var i = 0;
     var l = [];
+    var tileSizepx = 32;
     l = shuffledLocations.slice();
     proponents.forEach(agent => {
       //console.log(l[i]);
-      agent.setPosition(l[i].x * 32, l[i].y * 32);
+      var positionX = (l[i].x - 1) * tileSizepx ;
+      var positionY = (l[i].y + 1) * tileSizepx;
+      agent.setPosition(positionX, positionY);
       agent.setOrigin(0,0);
       i++;
     });
@@ -89,9 +93,10 @@ export default class CityScene extends Phaser.Scene {
     let levelMapData = Array.from(Array(w), () => new Array(h));
     
     var i = 0;
-    for (let width = 0; width < w; width++ ) {
-      for (let height = 0; height < h; height++) {  
-        levelMapData[width][height] = level[i];
+    
+    for (let height = 0; height < h; height++) {  
+      for (let width = 0; width < w; width++ ) {
+        levelMapData[height][width] = level[i];
         i++; 
       }
     }
@@ -179,7 +184,7 @@ export default class CityScene extends Phaser.Scene {
       { frameWidth: 32, frameHeight: 32 }
     );
      
-    var onBlast = function(){
+    var onBlast = function() {
       blast.x = bomb.x;
       blast.y = bomb.y;
       blast.play('bang');
