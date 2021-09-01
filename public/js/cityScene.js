@@ -18,10 +18,12 @@ export default class CityScene extends Phaser.Scene {
         var level = n
           .getLevel()
           .slice();
-        k++;  
+        k = (j * 32)  + i; 
         if (level[k] === 3) { //walkpaths
           locations.push({x:i, y:j});
+          
         }
+        k++;
       }
     }
     return locations;
@@ -37,8 +39,8 @@ export default class CityScene extends Phaser.Scene {
     l = shuffledLocations.slice();
     proponents.forEach(agent => {
       //console.log(l[i]);
-      var positionX = (l[i].x - 1) * tileSizepx ;
-      var positionY = (l[i].y + 1) * tileSizepx;
+      var positionX = (l[i].x ) * tileSizepx;
+      var positionY = (l[i].y ) * tileSizepx;
       agent.setPosition(positionX, positionY);
       agent.setOrigin(0,0);
       i++;
