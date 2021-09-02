@@ -4,24 +4,29 @@ export default class CityScene extends Phaser.Scene {
   nuCity;
   player;
   bombs = [];
-  constructor() {
+  
+  constructor () {
     super("SceneB_CityView");
     this.nuCity = new City();
   };
 
-  makeLocations() {
+  makeLocations () {
+    const WIDTH = 32;
+    const HEIGHT = 24;
     var locations = [];
+    const tiles = {
+      SIDEPATH: 3,
+    }
     var k = 0;
-    for (var i = 0; i < 32; i++) {
-      for (var j = 0; j < 24; j++){
+    for (var j = 0; j < WIDTH; j++) {
+      for (var i = 0; i < HEIGHT; i++){
         var n = this.nuCity;
         var level = n
           .getLevel()
           .slice();
-        k = (j * 32)  + i; 
-        if (level[k] === 3) { //walkpaths
-          locations.push({x:i, y:j});
-          
+        k = (j * WIDTH)  + i; 
+        if (level[k] === tiles.SIDEPATH) {
+          locations.push({x: i, y: j});      
         }
         k++;
       }
@@ -29,7 +34,7 @@ export default class CityScene extends Phaser.Scene {
     return locations;
   }
   
-  setLocations(proponents) { 
+  setLocations (proponents) { 
     var locations = this.makeLocations();
     var h = new Helper();
     var shuffledLocations = h.shuffle(locations);
@@ -55,7 +60,7 @@ export default class CityScene extends Phaser.Scene {
       {frameWidth:32, frameHeight:32}
     );
 
-    this.load.spritesheet("city-tiles", "../assets/tileart/darkCity.png",
+    this.load.spritesheet("city-tiles", "../assets/tileart/darkCity2.png",
     { frameWidth: 32, frameHeight: 32 });
 
     this.load.tilemapCSV("housemap", "../assets/maps/house.csv");
@@ -80,11 +85,9 @@ export default class CityScene extends Phaser.Scene {
       '../assets/sprites/explosion_spritesheet.png',
       { frameWidth: 32, frameHeight: 32 }
     );
-  
-    
-      
-    
+
   }
+
   create ()
   {
     var city = this.nuCity;
@@ -102,8 +105,6 @@ export default class CityScene extends Phaser.Scene {
         i++; 
       }
     }
-
-
 
     var mapCity = this.make.tilemap({data: levelMapData, tileWidth: 32, tileHeight: 32});
     var mapHouse = this.make.tilemap({key: "housemap", tileWidth: 32, tileHeight: 32});
