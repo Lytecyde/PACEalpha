@@ -20,7 +20,7 @@ export default class City {
         [1,1,1,1,7,8,8,7]
       ];
 
-      var promenade = [
+      var park = [
         [3,3,3,3,3,6,6,3],
         [9,9,9,9,3,2,2,3],
         [9,9,9,9,3,2,2,3],
@@ -31,20 +31,38 @@ export default class City {
         [1,1,1,1,7,8,8,7]
       ];
       
+      var promenade = [
+        [3,3,3,3,3,6,6,3],
+        [9,3,3,9,3,2,2,3],
+        [3,3,3,3,3,2,2,3],
+        [3,3,3,3,3,2,2,3],
+        [9,3,3,9,3,2,2,3],
+        [3,3,3,3,3,6,6,3],
+        [1,1,1,1,7,8,8,7],
+        [1,1,1,1,7,8,8,7]
+      ];
       //TODO park
-      //carpark/promenade/square
+      //carpark/promenade/plaza
       
       var rowsinhouse = 8;
       var avenue = [];
       
       var a = [];
-      var randomBlock = Math.floor(Math.random() * 4 ); 
+      var randomBlock = Math.floor(Math.random() * 4 );
+      var recreationals = [park, promenade]; 
+      var recreationalSpaces = recreationals.length;
+      var randomRecreation = 
+        Math.random() > (1 / recreationalSpaces) ?
+        park.slice():
+        promenade.slice();
+      
       for ( var j = 0; j < rowsinhouse; j++) {
         //console.log(avenue);
         //TODO: makeBlocks () {};
         var b = []
         for (let i = 0; i < 4; i++) {
-          b[i] = randomBlock == i ? promenade[j]: house[j];  
+          b[i] = randomBlock == i ? 
+            randomRecreation[j] : house[j];  
         };
 
         var block = [
