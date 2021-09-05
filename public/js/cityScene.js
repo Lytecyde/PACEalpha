@@ -1,5 +1,15 @@
 import City from '../js/city.js';
+//import LevelMap from '../js/levelmap.js';
+import Activities from '../js/activities.js';
 import Helper from '../js/helper.js';
+
+/**
+ * CityScene
+ * CityScene consists of buildings, roads and recreational blocks
+ * white/black and gray agents walk around on sidepaths.
+ * there are events/actions like bombs(ActionBehaviour)/Talking
+ * 
+ */
 export default class CityScene extends Phaser.Scene {
   nuCity;
   player;
@@ -86,13 +96,13 @@ export default class CityScene extends Phaser.Scene {
       { frameWidth: 32, frameHeight: 32 }
     );
 
-  }
+  };
 
-  create ()
+  createLevelMapCity (scene) 
   {
-    var city = this.nuCity;
+    var city = scene.nuCity;
     city.createCity();
-    var level = this.nuCity.getLevel().slice();
+    var level = city.getLevel().slice();
     const w = 32;
     const  h = 24;
     let levelMapData = Array.from(Array(w), () => new Array(h));
@@ -105,29 +115,44 @@ export default class CityScene extends Phaser.Scene {
         i++; 
       }
     }
+    return levelMapData;
+  }
+
+  create ()
+  {
+    var levelMapData = this.createLevelMapCity(this); 
 
     var mapCity = this.make.tilemap({data: levelMapData, tileWidth: 32, tileHeight: 32});
-    var mapHouse = this.make.tilemap({key: "housemap", tileWidth: 32, tileHeight: 32});
     var tiles = mapCity.addTilesetImage('city-tiles');
     var layer = mapCity.createLayer(0, tiles, 0, 0);
 
     this.player = this.physics.add.sprite(32 * 4 + 16, 32, 'spygray-right', 0);
     this.player.setCollideWorldBounds(true);
     
-    var proponents = this.add.group();
-    proponents.createMultiple(
+    var proponentsWhite = this.add.group();
+    proponentsWhite.createMultiple(
+    {
+        key: 'baddies',
+        frame: 4,
+        setXY: { x: 16, y: 144},
+        frameQuantity: 1,
+        repeat: 8
+    });
+    
+    var proponentsBlack = this.add.group();
+    proponentsBlack.createMultiple(
     {
         key: 'baddies',
         frame: 0,
         setXY: { x: 16, y: 144},
         frameQuantity: 1,
-        repeat: 15
+        repeat: 8
     });
-    
+
     //prepare bombs
     var bombIndex = 0;
     var bombs = {};
-    proponents.
+    proponentsWhite.
     getChildren().
     forEach(agent => {
         bombs[bombIndex] = this.physics.add.sprite(
@@ -139,7 +164,8 @@ export default class CityScene extends Phaser.Scene {
       }
     );
     
-    this.setLocations(proponents.getChildren());
+    this.setLocations(proponentsWhite.getChildren());
+    this.setLocations(proponentsBlack.getChildren());
     
     this.physics.add.existing(this.player);
 
@@ -205,12 +231,12 @@ export default class CityScene extends Phaser.Scene {
     function throwsBombAt() {
       bombs.forEach(bomb => {
         bomb.setAngle(15);
-        bomb.angularVelocity = 15;
+        bomb.angularVelocity = 15; 
         var direction;
         var location = bomb.getTopCenter();
         direction = location.x >= location.x ? -1:1;
         bomb.setVelocity(direction * 400, -400);
-        bomb.setDrag(40,0);
+        bomb.setDrag(40, 0);
         bomb.setGravity(0, 1600);
       });
     }
