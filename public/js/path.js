@@ -58,6 +58,10 @@ export default class Path {
 
         path.push(end);
         console.log("path " + path);
-        return path;
+        var pathToEnd = path.slice();
+        var pathToStart = path.reverse();
+        var roundpath = pathToEnd.concat(pathToStart);
+        console.log("roundpath" + roundpath);
+        return roundpath;
     }
 }

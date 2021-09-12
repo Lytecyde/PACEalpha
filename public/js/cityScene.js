@@ -38,7 +38,7 @@ export default class CityScene extends Phaser.Scene {
       .nuCity
       .getLevel()
       .slice();
-    this.numberOfAgents = 12; //max 12 locations.length on max
+    this.numberOfAgents = 2; //max 12 locations.length on max
   
     for (let index = 0; index < this.numberOfAgents; index++) {
       var cb = new Character();  
@@ -347,7 +347,7 @@ export default class CityScene extends Phaser.Scene {
     this.timer += delta;
     //one px step
     
-    while (this.timer > 100) {
+    while (this.timer > 700) {
       var pblack = this.proponentsBlack.getChildren();
       var pwhite = this.proponentsWhite.getChildren();
       
@@ -355,7 +355,7 @@ export default class CityScene extends Phaser.Scene {
       
       this.action.walk(pblack, cb, this.stepIndex);
       this.action.walk(pwhite, cw, this.stepIndex);
-      this.timer -= 100; 
+      this.timer -= 700; 
       
     };
   }
