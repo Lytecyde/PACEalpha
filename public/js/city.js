@@ -95,7 +95,7 @@ export default class City {
     }
 
     getLevel() {
-      console.log("city "  + this.city);
+      //console.log("city "  + this.city);
       return this.city;
     }
 }
