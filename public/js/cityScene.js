@@ -23,7 +23,8 @@ export default class CityScene extends Phaser.Scene {
   legalPaths = [];
   level = [];
   n;
-  characters = [];
+  charactersWhite = [];
+  charactersBlack = [];
   stepIndex;
   numberOfAgents;
 
@@ -37,12 +38,15 @@ export default class CityScene extends Phaser.Scene {
       .nuCity
       .getLevel()
       .slice();
-    this.numberOfAgents = 12; 
+    this.numberOfAgents = 12; //max 12 locations.length on max
   
     for (let index = 0; index < this.numberOfAgents; index++) {
-      var c = new Character();  
-      if (c.path.length !== 0) {
-        this.characters.push(c); 
+      var cb = new Character();  
+      var cw = new Character()
+      if (!(cb.path.length < 1) || 
+        !(cw.path.length < 1)) {
+        this.charactersWhite.push(cb); 
+        this.charactersBlack.push(cw);
       }
     }
     this.stepIndex = 0;
@@ -337,17 +341,20 @@ export default class CityScene extends Phaser.Scene {
     {
       this.player.setVelocityY(100);
     }
-    var c = this.characters;
+    var cb = this.charactersBlack;
+    var cw = this.charactersWhite;
     //timed event handling
     this.timer += delta;
     //one px step
     
     while (this.timer > 100) {
-      var p = this.proponentsBlack.getChildren();
+      var pblack = this.proponentsBlack.getChildren();
+      var pwhite = this.proponentsWhite.getChildren();
+      
       this.stepIndex = this.stepIndex + 1;
       
-      this.action.walk(p, c, this.stepIndex);
-      
+      this.action.walk(pblack, cb, this.stepIndex);
+      this.action.walk(pwhite, cw, this.stepIndex);
       this.timer -= 100; 
       
     };
