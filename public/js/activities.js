@@ -31,7 +31,7 @@ export default class Activities {
           var x = p[step].x;
           var y = p[step].y;
         }
-        spy.setPosition(x * 8 * 4, y * 8 * 3);
+        spy.setPosition(x * 32, y * 32);
         spy.setOrigin(0, 0);
         index++;
       });

@@ -37,7 +37,7 @@ export default class CityScene extends Phaser.Scene {
       .nuCity
       .getLevel()
       .slice();
-    this.numberOfAgents = 2; 
+    this.numberOfAgents = 12; 
   
     for (let index = 0; index < this.numberOfAgents; index++) {
       var c = new Character();  
@@ -51,45 +51,12 @@ export default class CityScene extends Phaser.Scene {
   makeLocations () {
     const WIDTH = 32;
     const HEIGHT = 24;
-    var locations = [];
-    const tiles = {
-      BUILDING: 0,
-      ROAD_HORIZONTAL: 1,
-      ROAD_VERTICAL: 2,
-      SIDEPATH: 3,
-      DOOR: 4,
-      CROSSING_VERTICAL: 6,
-      CROSSING_HORIZONTAL: 7,
-      CROSSING: 8,
-      GARDEN: 9,
-    }
-
     const allDoors = 
-      [{x:1, y:4}, {x:9, y:4}, {x:17, y:4}, {x:25, y:4},
-      {x:1, y:14},{x:9, y:14},{x:17, y:14},{x:25, y:14},
-      {x:1, y:22},{x:9, y:22},{x:17, y:22},{x:25, y:22}]
+      [{x:4, y:4}, {x:12, y:4}, {x:20, y:4},  {x:28, y:4},
+      {x:4, y:12}, {x:12, y:12},{x:20, y:12}, {x:28, y:12},
+      {x:4, y:20}, {x:12, y:20},{x:20, y:20}, {x:28, y:20}]
     ;
-    var k = 0;
-    var level = this.level
-    for (var j = 0; j < WIDTH; j++) {
-      for (var i = 0; i < HEIGHT; i++){
-        k = (j * WIDTH)  + i; 
-        //create start points for agents
-        if (false) 
-        {
-          locations.push({x: i, y: j});
-        }
-        //create legal paths for agents
-        if (level[k] !== tiles.BUILDING &&
-          level[k] !== tiles.ROAD_HORIZONTAL &&
-          level[k] !== tiles.ROAD_VERTICAL
-          ) {
-          this.legalPaths.push({x: i, y: j}); 
-        }
-
-        k++;
-      }
-    }
+    
     return allDoors;//locations;
   }
   
@@ -102,7 +69,7 @@ export default class CityScene extends Phaser.Scene {
     var tileSize = {px: 32};
     l = shuffledLocations.slice();
     proponents.forEach(agent => {
-      //console.log(l[i]);
+      console.log(l[i]);
       var positionX = (l[i].x ) * tileSize.px;
       var positionY = (l[i].y ) * tileSize.px;
       agent.setPosition(positionX, positionY);
@@ -212,7 +179,7 @@ export default class CityScene extends Phaser.Scene {
     var tiles = mapCity.addTilesetImage('city-tiles');
     var layer = mapCity.createLayer(0, tiles, 0, 0);
 
-    this.player = this.physics.add.sprite(32 * 4 + 16, 32, 'spygray-right', 0);
+    this.player = this.physics.add.sprite(32 * 4 + 16, 16, 'spygray-right', 0);
     this.player.setCollideWorldBounds(true);
     
     this.proponentsWhite = this.add.group();
@@ -220,9 +187,9 @@ export default class CityScene extends Phaser.Scene {
     {
         key: 'baddies',
         frame: 4,
-        setXY: { x: 16, y: 144},
+        setXY: { x: 0, y: 144},
         frameQuantity: 1,
-        repeat: 8
+        repeat: this.numberOfAgents - 1
     });
     
     this.proponentsBlack = this.add.group();
@@ -230,12 +197,10 @@ export default class CityScene extends Phaser.Scene {
     {
         key: 'baddies',
         frame: 0,
-        setXY: { x: 16, y: 144},
+        setXY: { x: 0, y: 144},
         frameQuantity: 1,
         repeat: this.numberOfAgents - 1
     });
-
-
 
     //prepare bombs
     var bombIndex = 0;

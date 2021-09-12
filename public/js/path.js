@@ -2,9 +2,10 @@ import Astar from '../js/astar_mik.js';
 
 export default class Path {
     //all starts
-    allDoors = [[{x:1, y:6}, {x:9, y:6}, {x:17, y:6}, {x:25, y:6}],
-      [{x:1, y:16},{x:9, y:16},{x:17, y:16},{x:25, y:16}],
-      [{x:1, y:26},{x:9, y:26},{x:17, y:26},{x:25, y:26}]
+    allDoors = [
+        [{x:4, y:4}, {x:12, y:4}, {x:20, y:4},  {x:28, y:4}],
+        [{x:4, y:12}, {x:12, y:12},{x:20, y:12}, {x:28, y:12}],
+        [{x:4, y:20}, {x:12, y:20},{x:20, y:210}, {x:28, y:20}]  
     ];
 
     roadLength;
@@ -43,15 +44,14 @@ export default class Path {
         
         //moving along the x axis
         for (let x = 0; x < dx; x++) {    
-            var next = {x:(start.x - (Math.sign(start.x - end.x) * x)), y:start.y}; 
+            var next = {x:(start.x - (Math.sign(start.x - end.x) * x)), y:start.y + 1}; 
             path.push(next);
         }
         //moving along y axis
-        //var smallery = start.y < end.y ? start.y : end.y;
         for (let y = 0; y < dy; y++) {    
             var next = {
                 x:(end.x),
-                y:(start.y - (Math.sign(start.y - end.y) * y))
+                y:(start.y + 1 - (Math.sign(start.y - end.y) * y ))
             }; 
             path.push(next);
         }
