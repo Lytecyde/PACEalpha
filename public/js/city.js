@@ -59,39 +59,32 @@ export default class City {
       for ( var j = 0; j < rowsinhouse; j++) {
         //console.log(avenue);
         //TODO: makeBlocks () {};
-        var b = []
+        var block = [];
+        
         for (let i = 0; i < 4; i++) {
-          b[i] = randomBlock == i ? 
+          block[i] = randomBlock == i ? 
             randomRecreation[j] : house[j];  
         };
-
-        var block = [
-          b[0],
-          b[1],
-          b[2],
-          b[3],
-        ];
-
+        
         a = a.concat(block[0], block[1], block[2], block[3]);
-
       }
-      avenue = avenue.concat(a);
+      avenue = a;
       this.avenue = avenue.slice();
-      
       return avenue;
     };
 
     createCity() {
-      var avenue = this.createAvenue();
+      var avenue = [];
       var avenues = 3;
 
       var city = [];
-      console.log(this.avenue);
-      for (var i = 0; i < avenues; i++) {   
-        city = city.concat(avenue);
+      console.log(this.avenue.length);
+      for (var i = 0; i < 3; i++) {   
         avenue = this.createAvenue();
+        city = city.concat(avenue);
       }
-      this.city = city.slice();
+      console.log(this.city.length);
+      this.city = city;
     }
 
     getLevel() {
