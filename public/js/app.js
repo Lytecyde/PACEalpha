@@ -196,12 +196,12 @@ var SceneC = new Phaser.Class({
         //blast = game.add.weapon(12,'bomb');
         //blast.autofire = true;
         //blast.fireRate = 6000;
-        blast = this.physics.add.sprite(100, 100, "explosion");
+        //blast = this.physics.add.sprite(100, 100, "explosion");
 
         player = this.physics.add.sprite(400, 300, 'spygray-right');
 
-        this.physics.add.collider(player, this.spyblack);
-        this.physics.add.collider(player, this.spywhite);
+        this.physics.add.overlap(player, spyblack, isClose);
+        this.physics.add.overlap(player, spywhite, isClose);
 
         //talk when meeting black side
         this.physics.add.overlap(
@@ -257,8 +257,7 @@ var SceneC = new Phaser.Class({
         //overlap to talk
         proximity = false;
 
-        this.physics.world.overlap(player, spyblack, isClose, null, this);
-        this.physics.world.overlap(player, spywhite, isClose, null, this);
+        
 
         //this.physics.world.overlap(bomb, spyblack,   onBlast, null, this);
         this.physics.world.overlap(bomb, spywhite, onKillaBlast, null, this);

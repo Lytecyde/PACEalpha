@@ -17,6 +17,8 @@ export default class Character {
     location;
     sprite;
     path; // from dayjob to target
+    proximity;
+
     constructor () {
         //resource = new Resource(); 
         this.createPath();
@@ -27,4 +29,9 @@ export default class Character {
         console.log(this.path);
     }
     
+    createMission() {
+        this.mission = new Mission();
+        this.power = this.mission.power;
+        this.weakness = this.mission.weakness;
+    }
 }

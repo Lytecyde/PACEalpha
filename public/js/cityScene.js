@@ -27,7 +27,7 @@ export default class CityScene extends Phaser.Scene {
   charactersBlack = [];
   stepIndex;
   numberOfAgents;
-
+  proximity;
   constructor () {
     super("SceneB_CityView");
     this.timer = 0;
@@ -38,7 +38,7 @@ export default class CityScene extends Phaser.Scene {
       .nuCity
       .getLevel()
       .slice();
-    this.numberOfAgents = 2; //max 12 locations.length on max
+    this.numberOfAgents = 6; //max 12 locations.length on max
   
     for (let index = 0; index < this.numberOfAgents; index++) {
       var cb = new Character();  
@@ -73,7 +73,6 @@ export default class CityScene extends Phaser.Scene {
     var tileSize = {px: 32};
     l = shuffledLocations.slice();
     proponents.forEach(agent => {
-      console.log(l[i]);
       var positionX = (l[i].x ) * tileSize.px;
       var positionY = (l[i].y ) * tileSize.px;
       agent.setPosition(positionX, positionY);
@@ -169,7 +168,7 @@ export default class CityScene extends Phaser.Scene {
     for (let height = 0; height < h; height++) {  
       for (let width = 0; width < w; width++ ) {
         levelMapData[height][width] = level[i];
-        i++; 
+        i++;
       }
     }
     return levelMapData;
@@ -186,6 +185,8 @@ export default class CityScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(32 * 4 + 16, 16, 'spygray-right', 0);
     this.player.setCollideWorldBounds(true);
     
+    this.proximity = false;
+
     this.proponentsWhite = this.add.group();
     this.proponentsWhite.createMultiple(
     {
@@ -314,10 +315,20 @@ export default class CityScene extends Phaser.Scene {
     }
 
     //blastWar(); 
+
+    //this.physics.add.overlap(this.proponentsBlack, this.proponentsWhite, this.action.convert);
+    //this.physics.add.overlap(this.proponentsBlack, this.proponentsWhite, this.action.convert());
+    this.physics.add.overlap(this.player, this.proponentsWhite, this.action.pacify());
+
+    //this.physics.add.collider(this.player, this.proponentsWhite);
+    //this.physics.add.collider(this.player, this.proponentsBlack);
+
   };
 
   update (time, delta)
   {
+    
+
     this.player.setVelocity(0);
     
     //cursor handling
@@ -341,23 +352,89 @@ export default class CityScene extends Phaser.Scene {
     {
       this.player.setVelocityY(100);
     }
-    var cb = this.charactersBlack;
-    var cw = this.charactersWhite;
+    //var cb = this.charactersBlack;
+    //var cw = this.charactersWhite;
     //timed event handling
     this.timer += delta;
     //one px step
-    
+     
+    var pblack = this.proponentsBlack.getChildren();
+    var pwhite = this.proponentsWhite.getChildren();
+
+    var spyblackindex = 0;
+    pblack.forEach(spyblack => {
+      if(this.checkOverlap(this.player, spyblack)
+        && !this.proximity
+      ) {
+        this.proximity == true;
+        console.log("peace good to black");
+        spyblack.destroy();
+        this.proponentsBlack.createMultiple({
+            key: 'baddies',
+            frame: 2, //GRAY color
+            setXY: { x: spyblack.x, y: spyblack.y},
+            frameQuantity: 1,
+            repeat: 0
+        });
+        if(this.charactersBlack.length > 0) {
+          this.charactersBlack.splice(spyblackindex,1);
+        }
+        this.proximity = false;
+      }
+      spyblackindex++;
+    });
+
+    var spywhiteindex = 0;
+    pwhite.forEach(spywhite => {
+      if(this.checkOverlap(this.player, spywhite)
+        && !this.proximity
+      ) {
+        this.proximity = true;
+        console.log("peace goodness to white");
+        spywhite.destroy();
+        this.proponentsWhite.createMultiple({
+            key: 'baddies',
+            frame: 2, //GRAY color
+            setXY: { x: spywhite.x, y: spywhite.y},
+            frameQuantity: 1,
+            repeat: 0
+        });
+        if(this.charactersWhite.length > 0) {
+          this.charactersWhite.splice(spywhiteindex,1);
+        }
+        this.proximity = false;
+      }
+      spywhiteindex++;
+    });
+
     while (this.timer > 700) {
       var pblack = this.proponentsBlack.getChildren();
       var pwhite = this.proponentsWhite.getChildren();
       
       this.stepIndex = this.stepIndex + 1;
       
-      this.action.walk(pblack, cb, this.stepIndex);
-      this.action.walk(pwhite, cw, this.stepIndex);
+      this.action.walk(pblack, this.charactersBlack, this.stepIndex);
+      this.action.walk(pwhite, this.charactersWhite, this.stepIndex);
+      
+      //this.action.near(pwhite, pblack, this.physics, this);
       this.timer -= 700; 
       
     };
+    
+  }
+
+  checkOverlap(spriteA, spriteB) {
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Geom.Intersects.RectangleToRectangle(boundsA, boundsB);
+  }
+
+  isClose() {
+    
+    console.log("peace! " + this.player.x + " " + this.player.y)
+    this.proximity = true;
   }
 };
+
 

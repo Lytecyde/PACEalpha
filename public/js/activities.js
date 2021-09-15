@@ -24,35 +24,34 @@ export default class Activities {
       //one step for each spy
       var index = 0;
       proponents.forEach(spy => { 
-        
-        var p = characters[index].path;
-        if(p.length > 0){
-          var step = stepIndex % p.length;
-          var x = p[step].x;
-          var y = p[step].y;
+        if(characters[index] != null){
+          var p = characters[index].path;
+          if(p.length > 0){
+            var step = stepIndex % p.length;
+            var x = p[step].x;
+            var y = p[step].y;
+          }
+          spy.setPosition(x * 32, y * 32);
+          spy.setOrigin(0, 0);
+          index++;
         }
-        spy.setPosition(x * 32, y * 32);
-        spy.setOrigin(0, 0);
-        index++;
       });
-
     };
-      /* talk when near
-        proponents.forEach(spy => {
-           this.physics.add.overlap(
-            player,
-            spy,
-            this.parlay,
-            null,
-            scene
-          ); 
-        });
-      */ 
-     
-      
     
+    near(proponents, opponent, physics, scene) {  
 
+    } 
+    
+    convert(){
+      console.log("convert");
+      //one side gets a spy eg: 
+      //remove black character
+      //add white character
+    }
 
+    pacify() {
+      console.log("Peace!");
+    }
 
     parlay () {
         //cut talk if not close
