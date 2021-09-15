@@ -34,7 +34,7 @@ TODO:
 3) does not matter who wins if one side loses the player loses
 4) to win, pass agents and recruit them or stop them from completeing their jobs
 
-**INSTALL INSTRUCTIONS
+**INSTALL INSTRUCTIONS**
 
 1) in the install directory create a lib directory
 
