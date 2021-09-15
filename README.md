@@ -1,13 +1,16 @@
 # PACEalpha
-phaser game of covert ops dealing with a nonviolent uprising using negotiation techniques, emotology,
-social relationship networks.
+phaser game of covert ops dealing with a cold war, in roder to start a nonviolent 
+uprising using negotiation techniques, emotology, elicitation and recruitment.
 
 it is a roguelite game, curious differences from the definition are
 - with a band of characters the player can assume, it is not a single alter ego game. 
 - no mass killings, in fact you need to save lives and win their hearts
 - 
 
-The big plan:
+
+**The big plan:**
+
+
 Around 150 pages of sketches have been written so far.
 
 Much more work lies ahead.
