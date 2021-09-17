@@ -1,12 +1,13 @@
 import Resource from '../js/resource.js';
 import Path from '../js/path.js';
-
-export default class Character {
+import Actor from '../js/actor.js';
+export default class Character extends Actor {
     trust;
     life;
-    serenity;
-    coherence;
-    route;
+
+    serenity; // stress vs euphoria
+    coherence; // the longer per day you recuperate the more resilient to stress  
+     
     power; //what MIICE power one has 
     weakness; //what MIICE one wants
     resource; 
@@ -17,9 +18,12 @@ export default class Character {
     location;
     sprite;
     path; // from dayjob to target
-    proximity;
 
-    constructor () {
+    rank; //agent
+    proximity;
+    style;
+
+    constructor (scene, side, x, y) {
         //resource = new Resource(); 
         this.createPath();
     }
