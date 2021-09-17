@@ -30,12 +30,12 @@ At this point it is just a demo with a couple of fun features.
 PLAN 
 
 1) spies walk around now on their job paths
+2) both sides walk around
 TODO:
-1) both sides walk around
-2) each agent completes secret missions and does "real" cover jobs in 
-    (entertainment, finance, propaganda, forces) which provide resources as miice
-3) does not matter who wins if one side loses the player loses
-4) to win, pass agents and recruit them or stop them from completeing their jobs
+1) each agent completes secret missions and does "real" cover jobs in 
+    (entertainment, finance, propaganda, archives, forces) which provide resources as miice
+2) victory check up, does not matter who wins if one side loses the player loses, 
+3) to win, pass agents and recruit them or stop them from completeing their jobs
 
 **INSTALL INSTRUCTIONS**
 
@@ -49,7 +49,13 @@ from their website
 
 3) copy that to the lib directory
 
-4) install serve with
+4) install node with npm
+5) install serve with
 npm install -g serve
-5) open command linerun:
+6) open command line and run:
+
 serve 
+
+7)(CTRL + V) paste the link into browser url(webaddress) box
+
+8) find the install directory for the game demo
