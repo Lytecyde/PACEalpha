@@ -1,7 +1,7 @@
-import Resource from '../js/resource.js';
 import Path from '../js/path.js';
-import Actor from '../js/actor.js';
-export default class Character extends Actor {
+//import Actor from '../js/actor.js';
+import SympathyBar from '../js/sympathybar.js';
+export default class Character extends Phaser.GameObjects.Sprite {
     trust;
     life;
 
@@ -14,23 +14,29 @@ export default class Character extends Actor {
     plan;
     armed;
     alignment;
+    sympathy;
     disguise;
     location;
     sprite;
     path; // from dayjob to target
-
-    rank; //agent
+    faction;
+    rank; //agent, officer, director 
     proximity;
     style;
+    sprite;
 
-    constructor (scene, side, x, y) {
-        //resource = new Resource(); 
+    constructor(scene, sprite, x, y) {
+        super(scene, x, y, sprite, 0);
+        this.setPosition(x, y);
+        this.alive = true;    
+        scene.add.existing(this);
         this.createPath();
+        this.sympathy = new SympathyBar(scene, x, y);
     }
 
     createPath() {
         this.path = new Path();
-        console.log(this.path);
+        //console.log(this.path);
     }
     
     createMission() {

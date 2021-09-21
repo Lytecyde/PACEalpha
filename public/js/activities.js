@@ -20,12 +20,12 @@ export default class Activities {
         //
     }
 
-    walk (proponents, characters, stepIndex) {
+    walk (spies, stepIndex) {
       //one step for each spy
       var index = 0;
-      proponents.forEach(spy => { 
-        if(characters[index] != null){
-          var p = characters[index].path;
+      spies.forEach(spy => { 
+        if(spies[index] != null){
+          var p = spy.path;
           if(p.length > 0){
             var step = stepIndex % p.length;
             var x = p[step].x;
@@ -38,15 +38,8 @@ export default class Activities {
       });
     };
     
-    near(proponents, opponent, physics, scene) {  
-
-    } 
-    
     convert(){
       console.log("convert");
-      //one side gets a spy eg: 
-      //remove black character
-      //add white character
     }
 
     pacify() {
@@ -76,7 +69,5 @@ export default class Activities {
           };
           talking = true;
         };
-    
-    
     }
 }

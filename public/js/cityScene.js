@@ -3,7 +3,8 @@ import City from '../js/city.js';
 import Activities from '../js/activities.js';
 import Character from '../js/character.js';
 import Helper from '../js/helper.js';
-
+import WhiteSpy from '../js/whitespy.js';
+import BlackSpy from '../js/blackspy.js';
 /**
  * CityScene
  * CityScene consists of buildings, roads and recreational blocks
@@ -17,8 +18,8 @@ export default class CityScene extends Phaser.Scene {
   bombs = [];
   action;
   timer;
-  proponentsBlack;
-  proponentsWhite;
+  spiesBlack;
+  spiesWhite;
   paths = [];
   legalPaths = [];
   level = [];
@@ -28,6 +29,7 @@ export default class CityScene extends Phaser.Scene {
   stepIndex;
   numberOfAgents;
   proximity;
+  sprite;
   constructor () {
     super("SceneB_CityView");
     this.timer = 0;
@@ -39,16 +41,18 @@ export default class CityScene extends Phaser.Scene {
       .getLevel()
       .slice();
     this.numberOfAgents = 6; //max 12 locations.length on max
-  
+    /*
     for (let index = 0; index < this.numberOfAgents; index++) {
-      var cb = new Character();  
-      var cw = new Character()
-      if (!(cb.path.length < 1) || 
-        !(cw.path.length < 1)) {
-        this.charactersWhite.push(cb); 
+      var cb = new Character(this, sprite, 0, 0);
+      var cw = new Character(this, sprite, 0, 0);
+      if (!(cb.path.length < 2) ||
+        !(cw.path.length < 2)) {
+        this.charactersWhite.push(cb);
         this.charactersBlack.push(cw);
       }
+      else continue;
     }
+    */
     this.stepIndex = 0;
   };
   //TODO: refactor into locations.js or agents...
@@ -141,17 +145,6 @@ export default class CityScene extends Phaser.Scene {
       '../assets/sprites/spy_gray_left.png'
     );  
 
-    this.load.image(
-      'bomb',
-      '../assets/sprites/bomb.png'
-    );
-
-    this.load.spritesheet(
-      'explosion',
-      '../assets/sprites/explosion_spritesheet.png',
-      { frameWidth: 32, frameHeight: 32 }
-    );
-
   };
 
   createLevelMapCity (scene) 
@@ -186,44 +179,29 @@ export default class CityScene extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     
     this.proximity = false;
-
-    this.proponentsWhite = this.add.group();
-    this.proponentsWhite.createMultiple(
-    {
-        key: 'baddies',
-        frame: 4,
-        setXY: { x: 0, y: 144},
-        frameQuantity: 1,
-        repeat: this.numberOfAgents - 1
-    });
+   
+    /*
+      adding spies to groups
+    */
+    this.sprite = this.add.sprite(0, 0, 'baddies',4);
+    this.spiesWhite = this.add.group();
     
-    this.proponentsBlack = this.add.group();
-    this.proponentsBlack.createMultiple(
-    {
-        key: 'baddies',
-        frame: 0,
-        setXY: { x: 0, y: 144},
-        frameQuantity: 1,
-        repeat: this.numberOfAgents - 1
-    });
-
-    //prepare bombs
-    var bombIndex = 0;
-    var bombs = this.bombs.slice();
-    this.proponentsWhite.
-    getChildren().
-    forEach(agent => {
-        bombs[bombIndex] = this.physics.add.sprite(
-          agent.getTopCenter().x,
-          agent.getTopCenter().y,
-        'bomb'
-        );
-        bombIndex++;
-      }
-    );
+    for (let index = 0; index < this.numberOfAgents; index++) {
+      this.spy = new WhiteSpy(this, this.sprite, 0, 0);
+      this.sprite.frame = 4;
+      this.spiesWhite.create(this.spy);
+    }
     
-    this.setLocations(this.proponentsWhite.getChildren());
-    this.setLocations(this.proponentsBlack.getChildren());
+    this.spiesBlack = this.add.group();
+    this.sprite = this.add.sprite(0, 0, 'baddies',0);
+    for (let index = 0; index < this.numberOfAgents; index++) {
+      this.spy = new BlackSpy(this, this.sprite, 0, 0);
+      this.sprite.frame = 0;
+      this.spiesBlack.create(this.spy);
+    }
+
+    this.setLocations(this.spiesWhite.getChildren());
+    this.setLocations(this.spiesBlack.getChildren());
     
     this.physics.add.existing(this.player);
 
@@ -231,94 +209,20 @@ export default class CityScene extends Phaser.Scene {
 
     mapCity.setCollisionBetween(0, 0);
 
-    //layer.setCollisionByExclusion([3]);
-    this.anims.create({
-      key: 'bang',
-      frames: this.anims.generateFrameNumbers(
-        'explosion',
-        { start: 0, end: 11 }),
-      defaultTextureKey: null,
-
-      // time
-      delay: 0,
-      frameRate: 24,
-      duration: null,
-      skipMissedFrames: true,
-
-      // repeat
-      repeat: 0,
-      repeatDelay: 2,
-      yoyo: false,
-
-      // visible
-      showOnStart: false,
-      hideOnComplete: true
-    });
-
+    
+    /*
     this.input.once('pointerdown', function (event) {
         console.log('From SceneB_CityView to SceneC');
         this.scene.start('sceneC');
     }, this);
-
-    this.load.image(
-      'bomb',
-      '../assets/sprites/bomb.png'
-    );
-
-    this.load.spritesheet(
-      'explosion',
-      '../assets/sprites/explosion_spritesheet.png',
-      { frameWidth: 32, frameHeight: 32 }
-    );
-     
+    */
+    
     this.stepIndex = 0;  
 
-    //BOMBS
-    var onBlast = function() {
-      blast.x = bomb.x;
-      blast.y = bomb.y;
-      blast.play('bang');
-      blast.once(Phaser.Animations.Events.SPRITE_ANIMATION_COMPLETE, () => {
-        bomb.destroy();
-      });
-      bombExplodes = false;
-    };
     
-    var onKillaBlast = function(){
-      onBlast();
-      spywhite.destroy();
-    }
-
-    function throwsBombAt() {
-      bombs.forEach(bomb => {
-        bomb.setAngle(15);
-        bomb.angularVelocity = 15; 
-        var direction;
-        var location = bomb.getTopCenter();
-        direction = location.x >= location.x ? -1:1;
-        bomb.setVelocity(direction * 400, -400);
-        bomb.setDrag(40, 0);
-        bomb.setGravity(0, 1600);
-      });
-    }
-
-    function throwsBomb() {
-      throwsBombAt(spyblack_location);
-    }
-    
-    function blastWar ()
-    {
-      bombs.forEach (blast =>  {
-        var location = blast.getTopCenter(blast);
-        throwsBombAt(location); 
-      });
-    }
-
-    //blastWar(); 
-
     //this.physics.add.overlap(this.proponentsBlack, this.proponentsWhite, this.action.convert);
     //this.physics.add.overlap(this.proponentsBlack, this.proponentsWhite, this.action.convert());
-    this.physics.add.overlap(this.player, this.proponentsWhite, this.action.pacify());
+    this.physics.add.overlap(this.player, this.spiesWhite, this.action.pacify());
 
     //this.physics.add.collider(this.player, this.proponentsWhite);
     //this.physics.add.collider(this.player, this.proponentsBlack);
@@ -327,8 +231,6 @@ export default class CityScene extends Phaser.Scene {
 
   update (time, delta)
   {
-    
-
     this.player.setVelocity(0);
     
     //cursor handling
@@ -358,8 +260,8 @@ export default class CityScene extends Phaser.Scene {
     this.timer += delta;
     //one px step
      
-    var pblack = this.proponentsBlack.getChildren();
-    var pwhite = this.proponentsWhite.getChildren();
+    var pblack = this.spiesBlack.getChildren();
+    var pwhite = this.spiesWhite.getChildren();
 
     var spyblackindex = 0;
     pblack.forEach(spyblack => {
@@ -369,7 +271,7 @@ export default class CityScene extends Phaser.Scene {
         this.proximity == true;
         console.log("peace good to black");
         spyblack.destroy();
-        this.proponentsBlack.createMultiple({
+        this.spiesBlack.createMultiple({
             key: 'baddies',
             frame: 2, //GRAY color
             setXY: { x: spyblack.x, y: spyblack.y},
@@ -392,7 +294,7 @@ export default class CityScene extends Phaser.Scene {
         this.proximity = true;
         console.log("peace goodness to white");
         spywhite.destroy();
-        this.proponentsWhite.createMultiple({
+        this.spiesWhite.createMultiple({
             key: 'baddies',
             frame: 2, //GRAY color
             setXY: { x: spywhite.x, y: spywhite.y},
@@ -408,13 +310,13 @@ export default class CityScene extends Phaser.Scene {
     });
 
     while (this.timer > 700) {
-      var pblack = this.proponentsBlack.getChildren();
-      var pwhite = this.proponentsWhite.getChildren();
+      var pblack = this.spiesBlack.getChildren();
+      var pwhite = this.spiesWhite.getChildren();
       
       this.stepIndex = this.stepIndex + 1;
       
-      this.action.walk(pblack, this.charactersBlack, this.stepIndex);
-      this.action.walk(pwhite, this.charactersWhite, this.stepIndex);
+      this.action.walk(pblack, this.stepIndex);
+      this.action.walk(pwhite, this.stepIndex);
       
       //this.action.near(pwhite, pblack, this.physics, this);
       this.timer -= 700; 

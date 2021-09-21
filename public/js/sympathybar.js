@@ -39,10 +39,10 @@ export default class SympathyBar {
         this.bar.clear();
         //border
         this.bar.fillStyle(0x000000);
-        this.bar.fillRect(this.x, this.y, 80, 16);
+        this.bar.fillRect(this.x, this.y, 32, 6);
         //  Health bar
         this.bar.fillStyle(0xffffff);
-        this.bar.fillRect(this.x + 2, this.y + 2, 76, 12);
+        this.bar.fillRect(this.x + 2, this.y + 2, 28, 2);
         switch (Math.floor(this.value/20)) {
             case 0:
             {

@@ -1,8 +1,9 @@
 import Dialogue from '../js/dialogue.js';
-import CityScene from './cityScene.js';
+import CityScene from '../js/cityScene.js';
 
 
 var player;
+var cursors;
 var layer;
 var spyblack, spywhite;
 var spyblack_location, spywhite_location;
@@ -257,6 +258,8 @@ var SceneC = new Phaser.Class({
         //overlap to talk
         proximity = false;
 
+        var cursors = this.cursors;
+        var player = this.player;
         
 
         //this.physics.world.overlap(bomb, spyblack,   onBlast, null, this);
@@ -325,7 +328,7 @@ var SceneC = new Phaser.Class({
 
 });
 
-var cursors;
+
 
 function addText ()
 {
@@ -458,7 +461,7 @@ var config = {
         }
     },
     parent: 'phaser-example',
-    scene: [ /*SceneA_Options,*/ SceneB_CityView, SceneC/*, TalkScene */ ]
+    scene: [/*SceneA_Options,*/ SceneB_CityView , SceneC]//, TalkScene  
 };
 
 var game = new Phaser.Game(config);
