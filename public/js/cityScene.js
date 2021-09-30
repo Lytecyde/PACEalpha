@@ -18,14 +18,12 @@ export default class CityScene extends Phaser.Scene {
   bombs = [];
   action;
   timer;
-  spiesBlack;
-  spiesWhite;
+  spiesBlack = [];
+  spiesWhite = [];
   paths = [];
   legalPaths = [];
   level = [];
   n;
-  charactersWhite = [];
-  charactersBlack = [];
   stepIndex;
   numberOfAgents;
   proximity;
@@ -59,13 +57,13 @@ export default class CityScene extends Phaser.Scene {
   makeLocations () {
     const WIDTH = 32;
     const HEIGHT = 24;
-    const allDoors = 
+    const allCorners = 
       [{x:4, y:4}, {x:12, y:4}, {x:20, y:4},  {x:28, y:4},
       {x:4, y:12}, {x:12, y:12},{x:20, y:12}, {x:28, y:12},
       {x:4, y:20}, {x:12, y:20},{x:20, y:20}, {x:28, y:20}]
     ;
     
-    return allDoors;//locations;
+    return allCorners; //locations;
   }
   
   setLocations (proponents) { 
@@ -77,23 +75,13 @@ export default class CityScene extends Phaser.Scene {
     var tileSize = {px: 32};
     l = shuffledLocations.slice();
     proponents.forEach(agent => {
-      var positionX = (l[i].x ) * tileSize.px;
-      var positionY = (l[i].y ) * tileSize.px;
+      var positionX = (l[i].x )*tileSize.px ;
+      var positionY = (l[i].y )*tileSize.px ;
       agent.setPosition(positionX, positionY);
       agent.setOrigin(0,0);
       i++;
     });
   }
-
-  createPathsForEachAgent () {
-    //TODO refactor for each job an agent might have
-    //startpoint
-    //getlocations...
-    //endpoint
-    
-    //return the whole route
-    
-  }  
 
   distance (start, end) {
     var xdiff = Math.abs(start.x - end.x);
@@ -184,24 +172,32 @@ export default class CityScene extends Phaser.Scene {
       adding spies to groups
     */
     this.sprite = this.add.sprite(0, 0, 'baddies',4);
-    this.spiesWhite = this.add.group();
-    
+    //this.spiesWhite = [];//this.add.group();
+    let w = [];
     for (let index = 0; index < this.numberOfAgents; index++) {
-      this.spy = new WhiteSpy(this, this.sprite, 0, 0);
-      this.sprite.frame = 4;
-      this.spiesWhite.create(this.spy);
+      
+      var spy = new WhiteSpy(this, this.sprite, 0, 0);
+      
+      console.log("spy  " + spy.path.x);
+      w.push(spy);
     }
-    
-    this.spiesBlack = this.add.group();
+    this.spiesWhite = w;
+    //this.spiesBlack = [];//this.add.group();
     this.sprite = this.add.sprite(0, 0, 'baddies',0);
+    let b = [];
     for (let index = 0; index < this.numberOfAgents; index++) {
-      this.spy = new BlackSpy(this, this.sprite, 0, 0);
-      this.sprite.frame = 0;
-      this.spiesBlack.create(this.spy);
+    
+      var spy = new BlackSpy(this, this.sprite, 0, 0);
+     
+      b.push(spy);
     }
-
-    this.setLocations(this.spiesWhite.getChildren());
-    this.setLocations(this.spiesBlack.getChildren());
+    console.log("path/ b[0].path.x"+ b[0].path.x);
+    this.spiesBlack = b;
+    console.log("blackspies" + b);
+    console.log("whitespies" + w)
+    //TODO: breadcrumb 
+    this.setLocations(b);
+    this.setLocations(w);
     
     this.physics.add.existing(this.player);
 
@@ -254,73 +250,54 @@ export default class CityScene extends Phaser.Scene {
     {
       this.player.setVelocityY(100);
     }
-    //var cb = this.charactersBlack;
-    //var cw = this.charactersWhite;
     //timed event handling
     this.timer += delta;
     //one px step
      
-    var pblack = this.spiesBlack.getChildren();
-    var pwhite = this.spiesWhite.getChildren();
+    
 
-    var spyblackindex = 0;
+    //when spies overlap with the peaceworker they turn to peaceworkers
+    /*
     pblack.forEach(spyblack => {
       if(this.checkOverlap(this.player, spyblack)
         && !this.proximity
       ) {
         this.proximity == true;
-        console.log("peace good to black");
+        console.log("peace goodness");
         spyblack.destroy();
-        this.spiesBlack.createMultiple({
-            key: 'baddies',
-            frame: 2, //GRAY color
-            setXY: { x: spyblack.x, y: spyblack.y},
-            frameQuantity: 1,
-            repeat: 0
-        });
-        if(this.charactersBlack.length > 0) {
-          this.charactersBlack.splice(spyblackindex,1);
-        }
-        this.proximity = false;
+        this.spiesBlack.push(new BlackSpy(this, "baddies", spyblack.path.x * 32, spyblack.path.y * 32, 2));
       }
-      spyblackindex++;
     });
 
-    var spywhiteindex = 0;
     pwhite.forEach(spywhite => {
       if(this.checkOverlap(this.player, spywhite)
         && !this.proximity
       ) {
         this.proximity = true;
-        console.log("peace goodness to white");
+        console.log("peace goodness");
         spywhite.destroy();
-        this.spiesWhite.createMultiple({
-            key: 'baddies',
-            frame: 2, //GRAY color
-            setXY: { x: spywhite.x, y: spywhite.y},
-            frameQuantity: 1,
-            repeat: 0
-        });
-        if(this.charactersWhite.length > 0) {
-          this.charactersWhite.splice(spywhiteindex,1);
-        }
-        this.proximity = false;
+        this.spiesWhite.push(new WhiteSpy(this, "baddies", spywhite.path.x * 32, spywhite.path.y * 32, 2));
       }
-      spywhiteindex++;
     });
-
+    */
     while (this.timer > 700) {
-      var pblack = this.spiesBlack.getChildren();
-      var pwhite = this.spiesWhite.getChildren();
+      console.log("step nr:" + this.stepIndex);
       
+      var pblack = this.spiesBlack;
+      var pwhite = this.spiesWhite;
+
       this.stepIndex = this.stepIndex + 1;
       
-      this.action.walk(pblack, this.stepIndex);
-      this.action.walk(pwhite, this.stepIndex);
-      
-      //this.action.near(pwhite, pblack, this.physics, this);
+      if(pblack.length > 1){
+        this.action.walk(pblack, this.stepIndex);
+      }
+      else {console.log("nothing as spies");}
+      if(pwhite.length > 1){
+        this.action.walk(pwhite, this.stepIndex);
+      }
+      else {console.log("nothing as spies");}
       this.timer -= 700; 
-      
+      this.proximity = false;
     };
     
   }

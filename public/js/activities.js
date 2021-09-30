@@ -20,21 +20,23 @@ export default class Activities {
         //
     }
 
-    walk (spies, stepIndex) {
+    walk (spies, stepIndex) { 
       //one step for each spy
-      var index = 0;
+      console.log("walking" + spies[0]);
+      
       spies.forEach(spy => { 
-        if(spies[index] != null){
-          var p = spy.path;
-          if(p.length > 0){
+        console.log("spy x" + spy.x);
+          var p = [];
+          p = spy.path;
+          console.log("p" + p);
+          if(p.length > 1 ){//
+            console.log("spies array 0 x" + spy.path[0].x);
             var step = stepIndex % p.length;
             var x = p[step].x;
             var y = p[step].y;
           }
-          spy.setPosition(x * 32, y * 32);
+          spy.setPosition(x , y);
           spy.setOrigin(0, 0);
-          index++;
-        }
       });
     };
     

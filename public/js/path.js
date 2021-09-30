@@ -9,14 +9,19 @@ export default class Path {
     ];
 
     roadLength;
-
+    path = [];
     constructor () {
-        var start = this.createRandomRoutePosition();
-        var end = this.createRandomRoutePosition();
-        this.roadLength = this.getPathLength(start, end);
-        console.log("path length " + this.roadLength);
-        var path = this.makePath(start, end);
-        return path;
+        var start, end;
+        do{
+            start = this.createRandomRoutePosition();
+            end = this.createRandomRoutePosition();
+            this.roadLength = this.getPathLength(start, end);
+        }while(this.roadLength < 1);
+        this.path = this.makePath(start, end);
+    }
+
+    getPath() {
+        return this.path;
     }
 
     createRandomRoutePosition() {
@@ -57,11 +62,11 @@ export default class Path {
         }
 
         path.push(end);
-        console.log("path " + path);
-        var pathToEnd = path.slice();
+        console.log("path " + path[0].x);
+        var pathToEnd = path.splice();
         var pathToStart = path.reverse();
         var roundpath = pathToEnd.concat(pathToStart);
-        console.log("roundpath" + roundpath);
+        //console.log("roundpath" + roundpath[2].x);
         return roundpath;
     }
 }

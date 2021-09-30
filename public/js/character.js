@@ -17,13 +17,12 @@ export default class Character extends Phaser.GameObjects.Sprite {
     sympathy;
     disguise;
     location;
-    sprite;
-    path; // from dayjob to target
+    
+    path = []; // from dayjob to target
     faction;
     rank; //agent, officer, director 
     proximity;
     style;
-    sprite;
 
     constructor(scene, sprite, x, y) {
         super(scene, x, y, sprite, 0);
@@ -31,17 +30,16 @@ export default class Character extends Phaser.GameObjects.Sprite {
         this.alive = true;    
         scene.add.existing(this);
         this.createPath();
-        this.sympathy = new SympathyBar(scene, x, y);
     }
 
     createPath() {
-        this.path = new Path();
-        //console.log(this.path);
+        let p = new Path();
+        console.log("path created" + p.getPath());
+        this.path = p.getPath();
+        //console.log("created a path");
     }
-    
-    createMission() {
-        this.mission = new Mission();
-        this.power = this.mission.power;
-        this.weakness = this.mission.weakness;
+
+    getPath() {
+        return this.path;
     }
 }
