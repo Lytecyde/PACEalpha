@@ -12,11 +12,14 @@ export default class Path {
     path = [];
     constructor () {
         var start, end;
-        do{
+        
+        do {
             start = this.createRandomRoutePosition();
             end = this.createRandomRoutePosition();
-            this.roadLength = this.getPathLength(start, end);
-        }while(this.roadLength < 1);
+        }while ((start.x === end.x) && (start.y === end.y));
+            
+        this.roadLength = this.getPathLength(start, end);
+        
         this.path = this.makePath(start, end);
     }
 
@@ -39,6 +42,7 @@ export default class Path {
         return manhattanDistanceX + manhattanDistanceY;
     }
 
+    //convert to astar
     makePath(start, end) {
         var path = [];
 
