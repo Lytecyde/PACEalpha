@@ -4,8 +4,9 @@ uprising using negotiation techniques, emotology, elicitation and recruitment.
 
 it is a roguelite game, curious differences from the definition are
 - with a band of characters the player can assume, it is not a single alter ego game. 
+    During game play, the player still guides one agent at a time.  
 - no mass killings, in fact you need to save lives and win their hearts
-- 
+
 
 
 **The big plan:**
@@ -16,15 +17,13 @@ Around 150 pages of sketches have been written so far.
 Much more work lies ahead.
 
 I want to use the ideas of 
-Jim Camp and Chris Voss - negotiation
-Jack Schafer - elicitation and empathy
-Jonah Bergen - blocks against recruitment
-Paul Ekman - emotology and lies
-Janine Driver - Body Movement Analysis
-Alan Watkins - stress and coherence 
++ Jim Camp and Chris Voss - negotiation
++ Jack Schafer - elicitation and empathy
++ Jonah Berger - blocks against recruitment
++ Paul Ekman - emotology and lies
++ Janine Driver - Body Movement Analysis
++ Alan Watkins - stress and coherence 
 and NVC - non violent communication
-
-
 
 At this point it is just a demo with a couple of fun features.
 PLAN 
