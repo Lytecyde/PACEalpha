@@ -26,15 +26,23 @@ I want to use the ideas of
 and NVC - non violent communication
 
 At this point it is just a demo with a couple of fun features.
-PLAN 
+
+
+**PLAN** 
 
 1) spies walk around now on their job paths
 2) both sides walk around
-TODO:
+
+
+**TODO:**
+
 1) each agent completes secret missions and does "real" cover jobs in 
-    (entertainment, finance, propaganda, archives, forces) which provide resources as miice
-2) victory check up, does not matter who wins if one side loses the player loses, 
-3) to win, pass agents and recruit them or stop them from completeing their jobs
+    (entertainment, finance, propaganda, archives, forces) which provide 
+    resources as MIICE ( money, information, inspiration, cooperation-coersion,
+    excitement)
+2) victory check, does not matter who wins if one side loses the player loses, 
+3) to win, pass agents and recruit them or stop them from completeing their 
+jobs
 
 **INSTALL INSTRUCTIONS**
 
