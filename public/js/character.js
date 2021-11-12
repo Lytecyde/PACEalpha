@@ -1,5 +1,4 @@
 import Path from '../js/path.js';
-//import Actor from '../js/actor.js';
 import SympathyBar from '../js/sympathybar.js';
 export default class Character extends Phaser.GameObjects.Sprite {
     trust;
