@@ -1,5 +1,4 @@
 import Dialogue from '../js/dialogue.js';
-import Character from '../js/character.js';
 export default class Activities {
     routes = [];
     talking;

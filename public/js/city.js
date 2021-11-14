@@ -1,6 +1,4 @@
 'use strict'
-import Helper from './helper.js';
-
 export default class City {
     avenue = [];
     city = [];

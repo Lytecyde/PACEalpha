@@ -1,7 +1,6 @@
 import City from '../js/city.js';
 //import LevelMap from '../js/levelmap.js';
 import Activities from '../js/activities.js';
-import Character from '../js/character.js';
 import Helper from '../js/helper.js';
 import WhiteSpy from '../js/whitespy.js';
 import BlackSpy from '../js/blackspy.js';

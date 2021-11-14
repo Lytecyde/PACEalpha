@@ -27,6 +27,21 @@ var proponents;
 const CANVAS_WIDTH = 32 * 32;
 const CANVAS_HEIGHT = 32 * 24;
 
+var Scene_Intro = new Phaser.Class({
+  Extends: Phaser.Scene,
+  initialize:
+  function Scene_Intro ()
+  {
+    Phaser.Scene.call(this, {key: 'Scene_Intro'});
+  },
+
+  preload: function () {},
+
+  create: function () {},
+
+
+});
+
 var SceneA_Options = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -327,14 +342,6 @@ var SceneC = new Phaser.Class({
     }
 
 });
-
-
-
-function addText ()
-{
-    document.getElementById('chat-history').innerHTML +=
-      document.getElementById('reply').value + "\n";
-};
 
 function makeLocations(countAgents) {
   var locations = [];
