@@ -1,5 +1,3 @@
-import Astar from '../js/astar_mik.js';
-
 export default class Path {
     //all starts
     allDoors = [
@@ -42,7 +40,7 @@ export default class Path {
         return manhattanDistanceX + manhattanDistanceY;
     }
 
-    //convert to astar
+    //TODO: convert to astar
     makePath(start, end) {
         var path = [];
 
@@ -70,7 +68,7 @@ export default class Path {
         var pathToEnd = path.splice();
         var pathToStart = path.reverse();
         var roundpath = pathToEnd.concat(pathToStart);
-        //console.log("roundpath" + roundpath[2].x);
+        
         return roundpath;
     }
 }

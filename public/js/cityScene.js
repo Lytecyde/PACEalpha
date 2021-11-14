@@ -315,5 +315,3 @@ export default class CityScene extends Phaser.Scene {
     this.proximity = true;
   }
 };
-
-

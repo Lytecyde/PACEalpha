@@ -56,7 +56,7 @@ export default class Activities {
         }
         //TALK options 💬
         if (!talking && proximity) {
-          //console.log('tralalalala');
+          //console.log('blah blah blah');
     
           var dialogue = new Dialogue();
     
