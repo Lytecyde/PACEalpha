@@ -11,7 +11,8 @@ import BlackSpy from '../js/blackspy.js';
  * there are events/actions like bombs(ActionBehaviour)/Talking
  * 
  */
-export default class CityScene extends Phaser.Scene {
+export default class CityScene extends Phaser
+.Scene {
   nuCity;
   player;
   bombs = [];
